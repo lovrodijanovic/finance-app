@@ -1,7 +1,8 @@
 ﻿:host {
-    max-width: 1280px;
-    padding: 2rem;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    padding-top: 60px;
+    padding-bottom: 60px;
 }
 
 tr:nth-child(even) {
@@ -12,7 +13,8 @@ tr:nth-child(odd) {
     background: #FFF;
 }
 
-th, td {
+th,
+td {
     padding-left: 1rem;
     padding-right: 1rem;
 }

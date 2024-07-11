@@ -33,3 +33,4 @@ C:\Users\Korisnik\Desktop\finance-app\FinanceApp.Server\obj\Debug\net8.0\refint\
 C:\Users\Korisnik\Desktop\finance-app\FinanceApp.Server\obj\Debug\net8.0\FinanceApp.Server.pdb
 C:\Users\Korisnik\Desktop\finance-app\FinanceApp.Server\obj\Debug\net8.0\FinanceApp.Server.genruntimeconfig.cache
 C:\Users\Korisnik\Desktop\finance-app\FinanceApp.Server\obj\Debug\net8.0\ref\FinanceApp.Server.dll
+C:\Users\Korisnik\Desktop\finance-app\FinanceApp.Server\obj\Debug\net8.0\FinanceApp.Server.sourcelink.json

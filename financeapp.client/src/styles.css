@@ -1,1 +1,33 @@
 /* You can add global styles to this file, and also import other style files */
+@import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+@import "../node_modules/bootstrap-icons/font/bootstrap-icons.css";
+
+body {
+    font-family: 'Roboto';
+    margin: 0;
+}
+
+.hidden-element {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.hidden-slide-right {
+    opacity: 0;
+    transform: translateX(200px);
+    transition: opacity 0.6s ease-out 0.3s, transform 1s ease-out 0.3s;
+}
+
+.hidden-slide-left {
+    opacity: 0;
+    transform: translateX(-400px);
+    transition: opacity 0.6s ease-out 0.3s, transform 1s ease-out 0.3s;
+}
+
+
+.visible {
+    opacity: 1;
+    transform: translateY(0);
+    transform: translateX(0);
+
+}

@@ -1,0 +1,68 @@
+footer {
+  font-size: 0.875rem;
+}
+
+.container {
+  max-width: 960px;
+}
+
+.list-unstyled {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.list-inline {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.list-inline-item {
+  display: inline-block;
+  margin-right: 0.5rem;
+  font-size: 20px;
+  padding: 5px;
+}
+.img-fluid{
+  max-width: 50%;
+  height: auto;
+}
+.list-inline-item:last-child {
+  margin-right: 0;
+}
+
+footer .list-unstyled li a {
+  color: inherit; /* Remove the blue color */
+  text-decoration: none; /* Remove the underline */
+}
+
+footer .list-unstyled li a:hover {
+  color: #000; /* Change the hover color */
+  text-decoration: underline; /* Add the underline on hover */
+}
+
+footer .list-inline li a {
+  color: inherit; /* Remove the blue color */
+  text-decoration: none; /* Remove the underline */
+}
+
+footer .list-inline li a:hover {
+  color: #000; /* Change the hover color */
+  text-decoration: underline; /* Add the underline on hover */
+}
+
+.text-center{
+    text-align: center;
+}
+
+@media (max-width: 767px) {
+    footer .row {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    footer .col-md-4 {
+      margin-bottom: 1rem;
+    }
+  }

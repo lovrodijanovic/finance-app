@@ -1,0 +1,15 @@
+label {
+    font-weight: 500;
+}
+
+.form-check-label {
+    font-weight: unset;
+}
+
+button {
+    width: 150px;
+}
+
+.pointer {
+    cursor: pointer;
+}

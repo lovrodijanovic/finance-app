@@ -1,0 +1,191 @@
+.first-one {
+    h1 {
+        font-size: 80px;
+        line-height: 70px;
+        font-weight: 800;
+    }
+
+    span {
+        font-size: 24px;
+        font-weight: 400;
+    }
+
+    p {
+        font-size: 20px;
+        font-weight: 200;
+    }
+}
+
+.first-second {
+    margin: 0 auto;
+    /* width: fit-content; */
+}
+
+.first-info {
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%; /* Adjust the height as needed */
+}
+
+.card{
+    background: rgba(241, 246, 255, 0.578);
+    padding: 35px 25px;
+   
+    height: 230px;
+    border-color: #b0b0b04d;
+    border-radius: 20px; 
+
+    .num{
+        
+        font-size: 22px;
+        font-weight: 300;
+    }
+
+    .title{
+        font-size: 22px;
+        font-weight: 400;
+    }
+
+    .desc {
+        font-size: 15px;
+    }
+}
+
+.card:hover {
+    background-color: #ffffff; /* Change the background color on hover */
+}
+
+.second {
+    background: #65fe9470;
+    padding: 50px 80px;
+}
+
+.feature{
+    display: flex;
+    justify-content: center;
+    gap:40px;
+
+    img {
+        max-width: 150px;
+    }
+    
+    span{
+        font-size: 50px;
+        font-weight: 500;
+    }
+
+    .content{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 10px;
+        width: 580px;
+    }
+}
+.third {
+    background: #ffffff;
+    padding: 50px 80px;
+}
+.forth{
+    background: #65fe9470;
+    padding: 50px 80px;
+
+
+}
+
+@keyframes slideInFromLeft {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  
+  .first-info {
+    animation: slideInFromLeft 1s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0.1;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  
+  .first-second {
+    opacity: 1;
+    animation: fadeIn 2s ease-in-out;
+  }
+/* Media queries for different screen sizes */
+
+/* Extra small devices (portrait phones, less than 576px) */
+@media (min-width: 100px) and (max-width: 575px) {
+    .first-one h1 {
+        font-size: 45px !important;
+        line-height: 40px;
+    }
+    .first-info{
+        text-align: center;
+    }
+    .card{
+        height: unset;
+    }
+
+    .feature {
+        span{
+            font-size: 22px;
+        }
+
+        img{
+            width: 50px;
+            height: 50px;
+        }
+    }
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) and (max-width: 767px) {
+    .first-one h1 {
+        font-size: 70px !important;
+    }
+    
+    .card{
+        height: unset;
+    }
+    .feature {
+        span{
+            font-size: 22px;
+        }
+
+        img{
+            width: 50px;
+            height: 50px;
+        }
+    }   
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) and (max-width: 991px) {
+    .first-one h1 {
+        font-size: 80px !important;
+    }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) and (max-width: 1199px) {
+    .first-one h1 {
+        font-size: 90px !important;
+    }
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+    .first-one h1 {
+        font-size: 100px !important;
+    }
+}
