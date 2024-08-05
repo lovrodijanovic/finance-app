@@ -15,64 +15,77 @@ export class CreatePlanComponent {
 
   form: FormGroup;
 
-  creditsAndDebts!: FormArray;
-  otherFunds!: FormArray;
+  debts!: FormArray;
+  investments!: FormArray;
 
   constructor(private formBuilder: FormBuilder, private router: Router) {
     this.form = this.formBuilder.group({
-      budget: ['', Validators.required],
-      emergencyFund: ['', Validators.required],
-      emergencyFundAmount: [''],
-      hasCreditsAndDebts: [''],
-      creditsAndDebts: this.formBuilder.array([]),
-      pensionFund: ['', Validators.required],
-      pensionFundAmount: [''],
-      hasOtherFunds: [''],
-      otherFunds: this.formBuilder.array([]),
-      age: ['', [Validators.required]],
-      riskTolerance: ['', [Validators.required, Validators.min(1), Validators.max(5)]],
-      netMonthlyIncome: ['', Validators.required],
+      userId: ['', Validators.required],
+
+      hasBudget: ['', Validators.required],
+
+      hasEmergencyFund: ['', Validators.required],
+      emergencyFund: this.formBuilder.group({
+        amount: [''],
+        monthlyContribution: ['']
+      }),
+
+      hasDebt: [''],
+      debts: this.formBuilder.array([]),
+
+      hasVoluntaryPensionInsurance: ['', Validators.required],
+      voluntaryPensionInsurance: this.formBuilder.group({
+        amount: [''],
+        monthlyContribution: ['']
+      }),
+
+      hasInvestments: [''],
+      investments: this.formBuilder.array([]),
+
+      riskSensitivity: ['', [Validators.required, Validators.min(1), Validators.max(5)]],
+
+      netEarnings: ['', Validators.required],
     });
 
-    this.addCredit();
-    this.addOtherFunds();
+    this.addDebt();
+    this.addInvestment();
 
 
-    this.creditsAndDebts = this.form.get('creditsAndDebts') as FormArray;
-    this.form.get('creditsAndDebts')?.valueChanges.subscribe(value => {
-      this.creditsAndDebts = this.form.get('creditsAndDebts') as FormArray;
+    this.debts = this.form.get('debts') as FormArray;
+    this.form.get('debts')?.valueChanges.subscribe(value => {
+      this.debts = this.form.get('debts') as FormArray;
     });
 
-    this.otherFunds = this.form.get('otherFunds') as FormArray;
-    this.form.get('otherFunds')?.valueChanges.subscribe(value => {
-      this.otherFunds = this.form.get('otherFunds') as FormArray;
+    this.investments = this.form.get('investments') as FormArray;
+    this.form.get('investments')?.valueChanges.subscribe(value => {
+      this.investments = this.form.get('investments') as FormArray;
     });
   }
 
-  addCredit() {
-    const creditsAndDebts = this.form.get('creditsAndDebts') as FormArray;
-    creditsAndDebts.push(this.formBuilder.group({
+  addDebt() {
+    const debts = this.form.get('debts') as FormArray;
+    debts.push(this.formBuilder.group({
       type: [''],
       amount: [''],
       interestRate: ['']
     }));
   }
 
-  addOtherFunds() {
-    const otherFunds = this.form.get('otherFunds') as FormArray;
-    otherFunds.push(this.formBuilder.group({
-      otherFundType: [''],
-      otherFundTotalAmount: [''],
-      otherFundMonthAmount: [''],
+  addInvestment() {
+    const investments = this.form.get('investments') as FormArray;
+    investments.push(this.formBuilder.group({
+      investmentType: [''],
+      amount: [''],
+      monthlyContribution: [''],
     }));
   }
 
   deleteDebt(num: number) {
-    this.creditsAndDebts.removeAt(num);
+    this.debts.removeAt(num);
   }
 
-  deleteOtherFund(num: number) {
-    this.otherFunds.removeAt(num);
+  deleteInvestment(num: number) {
+    this.investments.removeAt(num);
   }
 
   onSubmit() {
@@ -82,5 +95,4 @@ export class CreatePlanComponent {
     
     this.router.navigate(['/plan']);
   }
-
 }

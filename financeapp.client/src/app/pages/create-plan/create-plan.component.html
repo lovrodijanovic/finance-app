@@ -1,197 +1,329 @@
 <div class="container min-vh-100">
-    <div class="row justify-content-center ">
-        <div class="col-sm-6 col-md-6 col-xl-6">
-            <h2 class="text-center pt-5">Na korak do financijskog plana</h2>
-            
-            <div class="text-center pb-4 under">Molim Vas ispunite upitnik</div>
-            <form [formGroup]="form" (ngSubmit)="onSubmit()">
-                <!-- 1. Imate li budžet -->
-                <div class="form-group">
-                    <label for="budget">1. Imate li budžet</label>
-                    <br>
-                    <div class="form-check form-check-inline ms-2">
-                        <input class="form-check-input" type="radio" id="budgetYes" formControlName="budget"
-                            value="true">
-                        <label class="form-check-label" for="budgetYes">Da</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" id="budgetNo" formControlName="budget"
-                            value="false">
-                        <label class="form-check-label" for="budgetNo">Ne</label>
-                    </div>
-                    <div class="form-text">Budžet je plan (ili procjena) prihoda i rashoda za određeno razdoblje u
-                        budućnosti.</div>
-                </div>
+  <div class="row justify-content-center">
+    <div class="col-sm-6 col-md-6 col-xl-6">
+      <h2 class="text-center pt-5">Na korak do financijskog plana</h2>
 
-                <!-- 2. Imate li hitni fond? -->
-                <div class="form-group pt-4">
-                    <label for="emergencyFund">2. Imate li hitni fond?</label>
-                    <br>
-                    <div class="form-check form-check-inline ms-2">
-                        <input class="form-check-input" type="radio" id="emergencyFundYes"
-                            formControlName="emergencyFund" value="true">
-                        <label class="form-check-label" for="emergencyFundYes">Da</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" id="emergencyFundNo"
-                            formControlName="emergencyFund" value="false">
-                        <label class="form-check-label" for="emergencyFundNo">Ne</label>
-                    </div>
-                    <div class="form-text">
-                        Fond za hitne slučajeve financijski je izvor koji osoba drži za kratkoročne potrebe, poput
-                        medicinske skrbi, kreditnih kartica ili drugih obveza.</div>
-                    <div *ngIf="form.get('emergencyFund')?.value === 'true'" class="form-group">
-                        <label for="emergencyFundAmount">Unesite iznos hitnog fonda (EUR)</label>
-                        <input type="number" class="form-control" id="emergencyFundAmount"
-                            formControlName="emergencyFundAmount" placeholder="Unesi iznos fonda">
-                    </div>
-                </div>
-
-                <!-- 3. Imate li krediti i dugove? -->
-                <div class="form-group pt-4">
-                    <label for="hasCreditsAndDebts">3. Imate li krediti i dugove?</label>
-                    <br>
-                    <div class="form-check form-check-inline ms-2">
-                        <input class="form-check-input" type="radio" id="hasCreditsAndDebtsYes"
-                            formControlName="hasCreditsAndDebts" value="true">
-                        <label class="form-check-label" for="hasCreditsAndDebtsYes">Da</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" id="hasCreditsAndDebtsNo"
-                            formControlName="hasCreditsAndDebts" value="false">
-                        <label class="form-check-label" for="hasCreditsAndDebtsNo">Ne</label>
-                    </div>
-
-                    <div class="form-group" *ngIf="form.get('hasCreditsAndDebts')?.value === 'true'">
-                        <label for="creditDebt">Unesite kredite i dugove</label>
-                        <div formArrayName="creditsAndDebts">
-                            <div *ngFor="let credit of creditsAndDebts.controls; let i = index" [formGroupName]="i"
-                                class="row">
-                                <div class="col-12 d-flex justify-content-between form-text">
-                                    <span>{{i+1}}. Kredit/dug</span>
-                                    <span (click)="deleteDebt(i)" class="pointer">Obriši</span>
-                                </div>
-                                <div class="form-group col-4">
-                                    <label for="creditDebtType">Tip kredita/duga</label>
-                                    <input type="text" class="form-control" id="creditDebtType" formControlName="type"
-                                        placeholder="Unesi tip kredita/duga">
-                                </div>
-                                <div class="form-group col-4">
-                                    <label for="creditDebtAmount">Glavnica (EUR)</label>
-                                    <input type="number" class="form-control" id="creditDebtAmount"
-                                        formControlName="amount" placeholder="Unesi iznos glavnice">
-                                </div>
-                                <div class="form-group col-4">
-                                    <label for="creditDebtInterestRate">Kamatna stopa (%)</label>
-                                    <input type="number" class="form-control" id="creditDebtInterestRate"
-                                        formControlName="interestRate" placeholder="Unesi kamatnu stopu">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-end">
-                            <button type="button" class="btn btn-secondary mt-2" (click)="addCredit()">Dodaj
-                                kredit/dug</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 4. Da li ulažete u 3. Stup mirovinskog osiguranja? -->
-                <div class="form-group pt-4">
-                    <label for="pensionFund">4. Da li ulažete u 3. Stup mirovinskog osiguranja?</label>
-                    <br>
-                    <div class="form-check form-check-inline ms-2">
-                        <input class="form-check-input" type="radio" formControlName="pensionFund" value="true">
-                        <label class="form-check-label">Da</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" formControlName="pensionFund" value="false">
-                        <label class="form-check-label">Ne</label>
-                    </div>
-                    <div *ngIf="form.get('pensionFund')?.value === 'true'" class="form-group">
-                        <label for="pensionFundAmount">Unesite iznos mjesečnog ulaganja u mirovisno osiguranje
-                            (EUR)</label>
-                        <input type="number" class="form-control" id="pensionFundAmount"
-                            formControlName="pensionFundAmount" placeholder="Unesi iznos fonda">
-                    </div>
-                </div>
-
-                <!-- 5.	Imate li ostalih ulaganja? -->
-                <div class="form-group pt-4">
-                    <label for="hasOtherFunds">5. Imate li ostalih ulaganja?</label>
-                    <br>
-                    <div class="form-check form-check-inline ms-2">
-                        <input class="form-check-input" type="radio" id="hasOtherFundsYes"
-                            formControlName="hasOtherFunds" value="true">
-                        <label class="form-check-label" for="hasOtherFundsYes">Da</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" id="hasOtherFundsNo"
-                            formControlName="hasOtherFunds" value="false">
-                        <label class="form-check-label" for="hasOtherFundsNo">Ne</label>
-                    </div>
-
-                    <div class="form-group" *ngIf="form.get('hasOtherFunds')?.value === 'true'">
-                        <label for="creditDebt">Unesite informacije o ulaganju</label>
-                        <div formArrayName="otherFunds">
-                            <div *ngFor="let fund of otherFunds.controls; let i = index" [formGroupName]="i"
-                                class="row">
-                                <div class="col-12 d-flex justify-content-between form-text">
-                                    <span>{{i+1}}. Ulaganje</span>
-                                    <span (click)="deleteOtherFund(i)" class="pointer">Obriši</span>
-                                </div>
-                                <div class="form-group col-4">
-                                    <label for="otherFundType">Tip Uloga</label>
-                                    <select class="form-control" id="otherFundType" formControlName="otherFundType">
-                                        <option value="Štednja">Štednja</option>
-                                        <option value="Investicija">Investicija</option>
-                                        <option value="Kredit">Kredit</option>
-                                    </select>
-                                </div>
-                                <div class="form-group col-4">
-                                    <label for="otherFundTotalAmount">Glavnica (EUR)</label>
-                                    <input type="number" class="form-control" id="otherFundTotalAmount"
-                                        formControlName="otherFundTotalAmount" placeholder="Unesi ukupan iznos">
-                                </div>
-                                <div class="form-group col-4">
-                                    <label for="otherFundMonthAmount">Glavnica (EUR)</label>
-                                    <input type="number" class="form-control" id="otherFundMonthAmount"
-                                        formControlName="otherFundMonthAmount" placeholder="Unesi mjesečno ulaganje">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-end">
-                            <button type="button" class="btn btn-secondary mt-2" (click)="addOtherFunds()">Dodaj
-                                ulog</button>
-                        </div>
-                    </div>
-                </div>
-
-
-
-
-                <!-- 6. Ostalo -->
-                <label class="pt-3">6. Ostalo</label>
-                <div class="row">
-                    <div class="form-group col-6">
-                        <label for="age">Dob:</label>
-                        <input type="number" class="form-control" id="age" formControlName="age">
-                    </div>
-                    <div class="form-group col-6">
-                        <label for="riskTolerance">Osjetljivost na rizik  (1-5):</label>
-                        <input type="number" class="form-control" id="riskTolerance" formControlName="riskTolerance" min="1"
-                            max="5">
-                    </div>
-                </div>
-
-                <div class="form-group pt-3">
-                    <label for="netMonthlyIncome">Ukupna mjesečna neto primanja (EUR):</label>
-                    <input type="number" class="form-control" id="netMonthlyIncome" formControlName="netMonthlyIncome">
-                </div>
-                
-                <div class="d-flex justify-content-center py-3 pb-5">
-                    <button type="submit" class="btn btn-success mt-3 ">KREIRAJ PLAN</button>
-                </div>
-            </form>
+      <div class="text-center pb-4 under">Molim Vas ispunite upitnik</div>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <!-- 1. Imate li budžet -->
+        <div class="form-group">
+          <label for="hasBudget">1. Imate li budžet</label>
+          <br />
+          <div class="form-check form-check-inline ms-2">
+            <input
+              class="form-check-input"
+              type="radio"
+              id="budgetYes"
+              formControlName="hasBudget"
+              value="true"
+            />
+            <label class="form-check-label" for="budgetYes">Da</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="radio"
+              id="budgetNo"
+              formControlName="hasBudget"
+              value="false"
+            />
+            <label class="form-check-label" for="budgetNo">Ne</label>
+          </div>
+          <div class="form-text">
+            Budžet je plan (ili procjena) prihoda i rashoda za određeno
+            razdoblje u budućnosti.
+          </div>
         </div>
+
+        <!-- 2. Imate li hitni fond? -->
+        <div class="form-group pt-4">
+          <label for="hasEmergencyFund">2. Imate li hitni fond?</label>
+          <br />
+          <div class="form-check form-check-inline ms-2">
+            <input
+              class="form-check-input"
+              type="radio"
+              id="emergencyFundYes"
+              formControlName="hasEmergencyFund"
+              value="true"
+            />
+            <label class="form-check-label" for="emergencyFundYes">Da</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="radio"
+              id="emergencyFundNo"
+              formControlName="hasEmergencyFund"
+              value="false"
+            />
+            <label class="form-check-label" for="emergencyFundNo">Ne</label>
+          </div>
+          <div class="form-text">
+            Fond za hitne slučajeve financijski je izvor koji osoba drži za
+            kratkoročne potrebe, poput medicinske skrbi, kreditnih kartica ili
+            drugih obveza.
+          </div>
+          <div
+            *ngIf="form.get('hasEmergencyFund')?.value === 'true'"
+            class="form-group"
+          >
+            <label for="emergencyFundAmount"
+              >Unesite iznos hitnog fonda (EUR)</label
+            >
+            <input
+              type="number"
+              class="form-control"
+              id="emergencyFundAmount"
+              formControlName="emergencyFundAmount"
+              placeholder="Unesi iznos fonda"
+            />
+          </div>
+        </div>
+
+        <!-- 3. Imate li krediti i dugove? -->
+        <div class="form-group pt-4">
+          <label for="hasDebt">3. Imate li krediti i dugove?</label>
+          <br />
+          <div class="form-check form-check-inline ms-2">
+            <input
+              class="form-check-input"
+              type="radio"
+              id="hasDebtYes"
+              formControlName="hasDebt"
+              value="true"
+            />
+            <label class="form-check-label" for="hasDebtYes">Da</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="radio"
+              id="hasDebtNo"
+              formControlName="hasDebt"
+              value="false"
+            />
+            <label class="form-check-label" for="hasDebtNo">Ne</label>
+          </div>
+
+          <div class="form-group" *ngIf="form.get('hasDebt')?.value === 'true'">
+            <label for="debt">Unesite kredite i dugove</label>
+            <div formArrayName="debts">
+              <div
+                *ngFor="let debt of debts.controls; let i = index"
+                [formGroupName]="i"
+                class="row"
+              >
+                <div class="col-12 d-flex justify-content-between form-text">
+                  <span>{{ i + 1 }}. Kredit/dug</span>
+                  <span (click)="deleteDebt(i)" class="pointer">Obriši</span>
+                </div>
+                <div class="form-group col-4">
+                  <label for="debtType">Tip kredita/duga</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="debtType"
+                    formControlName="type"
+                    placeholder="Unesi tip kredita/duga"
+                  />
+                </div>
+                <div class="form-group col-4">
+                  <label for="amount">Glavnica (EUR)</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="amount"
+                    formControlName="amount"
+                    placeholder="Unesi iznos glavnice"
+                  />
+                </div>
+                <div class="form-group col-4">
+                  <label for="interestRate">Kamatna stopa (%)</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="interestRate"
+                    formControlName="interestRate"
+                    placeholder="Unesi kamatnu stopu"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="d-flex justify-content-end">
+              <button
+                type="button"
+                class="btn btn-secondary mt-2"
+                (click)="addDebt()"
+              >
+                Dodaj kredit/dug
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Da li ulažete u 3. Stup mirovinskog osiguranja? -->
+        <div class="form-group pt-4">
+          <label for="hasVoluntaryPensionInsurance"
+            >4. Da li ulažete u 3. Stup mirovinskog osiguranja?</label
+          >
+          <br />
+          <div class="form-check form-check-inline ms-2">
+            <input
+              class="form-check-input"
+              type="radio"
+              formControlName="hasVoluntaryPensionInsurance"
+              value="true"
+            />
+            <label class="form-check-label">Da</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="radio"
+              formControlName="hasVoluntaryPensionInsurance"
+              value="false"
+            />
+            <label class="form-check-label">Ne</label>
+          </div>
+          <div
+            *ngIf="form.get('hasVoluntaryPensionInsurance')?.value === 'true'"
+            class="form-group"
+          >
+            <label for="amount"
+              >Unesite iznos mjesečnog ulaganja u mirovisno osiguranje
+              (EUR)</label
+            >
+            <input
+              type="number"
+              class="form-control"
+              id="amount"
+              formControlName="amount"
+              placeholder="Unesi iznos fonda"
+            />
+          </div>
+        </div>
+
+        <!-- 5.	Imate li ostalih ulaganja? -->
+        <div class="form-group pt-4">
+          <label for="hasInvestments">5. Imate li ostalih ulaganja?</label>
+          <br />
+          <div class="form-check form-check-inline ms-2">
+            <input
+              class="form-check-input"
+              type="radio"
+              id="hasInvestmentsYes"
+              formControlName="hasInvestments"
+              value="true"
+            />
+            <label class="form-check-label" for="hasInvestmentsYes">Da</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="radio"
+              id="hasInvestmentsNo"
+              formControlName="hasInvestments"
+              value="false"
+            />
+            <label class="form-check-label" for="hasInvestmentsNo">Ne</label>
+          </div>
+
+          <div
+            class="form-group"
+            *ngIf="form.get('hasInvestments')?.value === 'true'"
+          >
+            <label for="investments">Unesite informacije o ulaganju</label>
+            <div formArrayName="investments">
+              <div
+                *ngFor="let fund of investments.controls; let i = index"
+                [formGroupName]="i"
+                class="row"
+              >
+                <div class="col-12 d-flex justify-content-between form-text">
+                  <span>{{ i + 1 }}. Ulaganje</span>
+                  <span (click)="deleteInvestment(i)" class="pointer"
+                    >Obriši</span
+                  >
+                </div>
+                <div class="form-group col-4">
+                  <label for="otherFundType">Tip Uloga</label>
+                  <select
+                    class="form-control"
+                    id="investmentType"
+                    formControlName="investmentType"
+                  >
+                    <option value="Štednja">Štednja</option>
+                    <option value="Investicija">Investicija</option>
+                    <option value="Kredit">Kredit</option>
+                  </select>
+                </div>
+                <div class="form-group col-4">
+                  <label for="amount">Glavnica (EUR)</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="amount"
+                    formControlName="amount"
+                    placeholder="Unesi ukupan iznos"
+                  />
+                </div>
+                <div class="form-group col-4">
+                  <label for="monthlyContribution">Glavnica (EUR)</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="monthlyContribution"
+                    formControlName="monthlyContribution"
+                    placeholder="Unesi mjesečno ulaganje"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="d-flex justify-content-end">
+              <button
+                type="button"
+                class="btn btn-secondary mt-2"
+                (click)="addInvestment()"
+              >
+                Dodaj ulog
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. Ostalo -->
+        <label class="pt-3">6. Ostalo</label>
+        <div class="row">
+          <div class="form-group col-6">
+            <label for="riskSensitivity">Osjetljivost na rizik (1-5):</label>
+            <input
+              type="number"
+              class="form-control"
+              id="riskSensitivity"
+              formControlName="riskSensitivity"
+              min="1"
+              max="5"
+            />
+          </div>
+        </div>
+
+        <div class="form-group pt-3">
+          <label for="netEarnings">Ukupna mjesečna neto primanja (EUR):</label>
+          <input
+            type="number"
+            class="form-control"
+            id="netEarnings"
+            formControlName="netEarnings"
+          />
+        </div>
+
+        <div class="d-flex justify-content-center py-3 pb-5">
+          <button type="submit" class="btn btn-success mt-3">
+            KREIRAJ PLAN
+          </button>
+        </div>
+      </form>
     </div>
+  </div>
 </div>

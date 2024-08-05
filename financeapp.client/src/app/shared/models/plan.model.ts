@@ -1,53 +1,72 @@
-export class CreditOrDebt {
+export class Debt {
     type: string;
-    amount: number;
+    principal: number;
     interestRate: number;
-
-    constructor(type: string = '', amount: number = 0, interestRate: number = 0) {
+    maturityYears: number;
+    monthlyContribution: number;
+    constructor(type: string = '', principal: number = 0, interestRate: number = 0, maturityYears: number = 0, monthlyContribution: number = 0) {
         this.type = type;
-        this.amount = amount;
+        this.principal = principal;
         this.interestRate = interestRate;
+        this.maturityYears = maturityYears;
+        this.monthlyContribution = monthlyContribution;
     }
 }
 
-export class OtherFund {
-    otherFundType: string;
-    otherFundTotalAmount: number;
-    otherFundMonthAmount: number;
+export class Investment {
+    investmentType: string;
+    amount: number;
+    monthlyContribution: number;
 
-    constructor(otherFundType: string = '', otherFundTotalAmount: number = 0, otherFundMonthAmount: number = 0) {
-        this.otherFundType = otherFundType;
-        this.otherFundTotalAmount = otherFundTotalAmount;
-        this.otherFundMonthAmount = otherFundMonthAmount;
+    constructor(investmentType: string = '', amount: number = 0, monthlyContribution: number = 0) {
+      this.investmentType = investmentType;
+      this.amount = amount;
+      this.monthlyContribution = monthlyContribution;
     }
+}
+
+export class EmergencyFund {
+  amount: number;
+  monthlyContribution: number;
+  constructor(amount: number = 0, monthlyContribution: number = 0) {
+    this.amount = amount;
+    this.monthlyContribution = monthlyContribution;
+  }
+}
+
+export class VoluntaryPensionInsurance {
+  amount: number;
+  monthlyContribution: number;
+  constructor(amount: number = 0, monthlyContribution: number = 0) {
+    this.amount = amount;
+    this.monthlyContribution = monthlyContribution;
+  }
 }
 
 export class FinancialInformation {
-    budget: string;
-    emergencyFund: string;
-    emergencyFundAmount: number;
-    hasCreditsAndDebts: boolean;
-    creditsAndDebts: CreditOrDebt[];
-    pensionFund: string;
-    pensionFundAmount: number;
-    hasOtherFunds: boolean;
-    otherFunds: OtherFund[];
-    age: number;
-    riskTolerance: number;
-    netMonthlyIncome: number;
+    hasBudget: string;
+    hasEmergencyFund: string;
+    emergencyFund: EmergencyFund;
+    hasDebt: boolean;
+    debts: Debt[];
+    hasVoluntaryPensionInsurance: string;
+    voluntaryPensionInsurance: VoluntaryPensionInsurance;
+    hasInvestments: boolean;
+    investments: Investment[];
+    riskSensitivity: number;
+    netEarnings: number;
 
     constructor(model: any) {
-        this.budget = model.budget;
-        this.emergencyFund = model.emergencyFund;
-        this.emergencyFundAmount = model.emergencyFundAmount;
-        this.hasCreditsAndDebts = model.hasCreditsAndDebts;
-        this.creditsAndDebts = model.creditsAndDebts;
-        this.pensionFund = model.pensionFund;
-        this.pensionFundAmount = model.pensionFundAmount;
-        this.hasOtherFunds = model.hasOtherFunds;
-        this.otherFunds = model.otherFunds;
-        this.age = model.age;
-        this.riskTolerance = model.riskTolerance;
-        this.netMonthlyIncome = model.netMonthlyIncome;
+      this.hasBudget = model.hasBudget;
+      this.hasEmergencyFund = model.hasEmergencyFund;
+      this.emergencyFund = model.emergencyFund;
+      this.hasDebt = model.hasDebt;
+      this.debts = model.debts;
+      this.hasVoluntaryPensionInsurance = model.hasVoluntaryPensionInsurance;
+      this.voluntaryPensionInsurance = model.voluntaryPensionInsurance;
+      this.hasInvestments = model.hasInvestments;
+      this.investments = model.investments;
+      this.riskSensitivity = model.riskSensitivity;
+      this.netEarnings = model.netEarnings;
     }
 }
