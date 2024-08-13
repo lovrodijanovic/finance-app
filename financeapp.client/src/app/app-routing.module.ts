@@ -9,10 +9,6 @@ import { PlanComponent } from './pages/plan/plan.component';
 
 const routes: Routes = [
   {
-    path: '',
-    component: LandingComponent,
-  },
-  {
     path: 'login',
     component: LoginComponent
   },
@@ -29,12 +25,20 @@ const routes: Routes = [
     component: CreatePlanComponent
   },
   {
+    path: 'plan/:id',
+    component: PlanComponent
+  },
+  {
     path: 'plan',
     component: PlanComponent
   },
   {
+    path: '',
+    component: LandingComponent,
+  },
+  {
     path: '**',
-    component: LandingComponent
+    redirectTo: ''
   }
 ];
 

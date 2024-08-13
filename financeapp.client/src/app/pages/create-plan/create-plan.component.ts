@@ -1,83 +1,152 @@
 import { Component } from '@angular/core';
 import { SharedModule } from '../../shared/shared/shared.module';
-import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
-import { FinancialInformation } from '../../shared/models/plan.model';
+import { DebtType, InvestmentType } from '../../shared/models/plan.model';
+import { FinancialFormService } from '../../services/financial-form.service';
 
 @Component({
   selector: 'app-create-plan',
   standalone: true,
   imports: [SharedModule, FormsModule, ReactiveFormsModule],
   templateUrl: './create-plan.component.html',
-  styleUrl: './create-plan.component.css'
+  styleUrls: ['./create-plan.component.css'],
 })
 export class CreatePlanComponent {
+  public debtTypes: DebtType[] = [];
+  public investmentTypes: InvestmentType[] = [];
 
-  form: FormGroup;
+  formGroup: FormGroup;
 
-  debts!: FormArray;
-  investments!: FormArray;
+  constructor(
+    private financialFormService: FinancialFormService,
+    private formBuilder: FormBuilder,
+    private router: Router
+  ) {
+    this.formGroup = this.formBuilder.group({
+      userId: [null],
 
-  constructor(private formBuilder: FormBuilder, private router: Router) {
-    this.form = this.formBuilder.group({
-      userId: ['', Validators.required],
+      hasBudget: [null, Validators.required],
 
-      hasBudget: ['', Validators.required],
-
-      hasEmergencyFund: ['', Validators.required],
+      hasEmergencyFund: [null],
       emergencyFund: this.formBuilder.group({
-        amount: [''],
-        monthlyContribution: ['']
+        amount: [null],
+        monthlyContribution: [null],
       }),
 
-      hasDebt: [''],
+      hasDebt: [null, Validators.required],
       debts: this.formBuilder.array([]),
 
-      hasVoluntaryPensionInsurance: ['', Validators.required],
+      hasVoluntaryPensionInsurance: [null, Validators.required],
       voluntaryPensionInsurance: this.formBuilder.group({
-        amount: [''],
-        monthlyContribution: ['']
+        amount: [null],
+        monthlyContribution: [null],
       }),
 
-      hasInvestments: [''],
+      hasInvestments: [null, Validators.required],
       investments: this.formBuilder.array([]),
 
-      riskSensitivity: ['', [Validators.required, Validators.min(1), Validators.max(5)]],
+      riskSensitivity: [null, [Validators.required, Validators.min(1), Validators.max(5)]],
 
-      netEarnings: ['', Validators.required],
+      netEarnings: [null, Validators.required],
     });
 
-    this.addDebt();
-    this.addInvestment();
-
-
-    this.debts = this.form.get('debts') as FormArray;
-    this.form.get('debts')?.valueChanges.subscribe(value => {
-      this.debts = this.form.get('debts') as FormArray;
+    this.formGroup.get('hasDebt')?.valueChanges.subscribe(value => {
+      if (value === 'false') {
+        this.clearDebts();
+      }
     });
 
-    this.investments = this.form.get('investments') as FormArray;
-    this.form.get('investments')?.valueChanges.subscribe(value => {
-      this.investments = this.form.get('investments') as FormArray;
+    this.formGroup.get('hasInvestments')?.valueChanges.subscribe(value => {
+      if (value === 'false') {
+        this.clearInvestments();
+      }
     });
+
+    this.formGroup.get('hasVoluntaryPensionInsurance')?.valueChanges.subscribe(value => {
+      this.toggleVoluntaryPensionInsurance(value);
+    });
+
+    this.formGroup.get('hasEmergencyFund')?.valueChanges.subscribe(value => {
+      this.toggleEmergencyFund(value);
+    });
+
+    this.financialFormService.getDebtTypes().subscribe(
+      result => {
+        this.debtTypes = result;
+      },
+      error => console.error(error)
+    );
+
+    this.financialFormService.getInvestmentTypes().subscribe(
+      result => {
+        this.investmentTypes = result;
+      },
+      error => console.error(error)
+    );
+  }
+
+  get debts(): FormArray {
+    return this.formGroup.get('debts') as FormArray;
+  }
+
+  get investments(): FormArray {
+    return this.formGroup.get('investments') as FormArray;
+  }
+
+  get voluntaryPensionInsurance(): FormGroup {
+    return this.formGroup.get('voluntaryPensionInsurance') as FormGroup;
+  }
+
+  get emergencyFund(): FormGroup {
+    return this.formGroup.get('emergencyFund') as FormGroup;
+  }
+
+  private toggleEmergencyFund(hasEmergencyFund: string | boolean) {
+    const enabled = hasEmergencyFund === 'true' || hasEmergencyFund === true;
+    if (enabled) {
+      this.emergencyFund.enable();
+    } else {
+      this.emergencyFund.disable();
+      this.emergencyFund.reset();
+    }
+  }
+
+  private toggleVoluntaryPensionInsurance(hasInsurance: string | boolean) {
+    const enabled = hasInsurance === 'true' || hasInsurance === true;
+    if (enabled) {
+      this.voluntaryPensionInsurance.enable();
+    } else {
+      this.voluntaryPensionInsurance.disable();
+      this.voluntaryPensionInsurance.reset();
+    }
   }
 
   addDebt() {
-    const debts = this.form.get('debts') as FormArray;
-    debts.push(this.formBuilder.group({
-      type: [''],
-      amount: [''],
-      interestRate: ['']
-    }));
+    this.debts.push(
+      this.formBuilder.group({
+        debtType: [this.debtTypes[0]?.id || ''],
+        amount: [null],
+        interestRate: [null],
+      })
+    );
   }
 
   addInvestment() {
-    const investments = this.form.get('investments') as FormArray;
-    investments.push(this.formBuilder.group({
-      investmentType: [''],
-      amount: [''],
-      monthlyContribution: [''],
-    }));
+    this.investments.push(
+      this.formBuilder.group({
+        investmentType: [this.investmentTypes[0]?.id || ''],
+        amount: [null],
+        monthlyContribution: [null],
+      })
+    );
   }
 
   deleteDebt(num: number) {
@@ -88,11 +157,41 @@ export class CreatePlanComponent {
     this.investments.removeAt(num);
   }
 
-  onSubmit() {
-    const model = new FinancialInformation(this.form.getRawValue());
-    console.log(model);
+  clearDebts() {
+    while (this.debts.length) {
+      this.debts.removeAt(0);
+    }
+  }
 
-    
-    this.router.navigate(['/plan']);
+  clearInvestments() {
+    while (this.investments.length) {
+      this.investments.removeAt(0);
+    }
+  }
+
+  onSubmit() {
+    const financialForm = {
+      ...this.formGroup.value,
+      userId: '123e4567-e89b-12d3-a456-426614174000',
+      hasBudget: this.convertToBoolean(this.formGroup.value.hasBudget),
+      hasDebt: this.convertToBoolean(this.formGroup.value.hasDebt),
+      hasEmergencyFund: this.convertToBoolean(this.formGroup.value.hasEmergencyFund),
+      hasInvestments: this.convertToBoolean(this.formGroup.value.hasInvestments),
+      hasVoluntaryPensionInsurance: this.convertToBoolean(this.formGroup.value.hasVoluntaryPensionInsurance),
+    };
+
+    this.financialFormService.submitForm(financialForm).subscribe(
+      response => {
+        const financialStatusId = response;
+        this.router.navigate(['/plan', financialStatusId]);
+      },
+      error => {
+        console.error('Error submitting form', error);
+      }
+    );
+  }
+
+  private convertToBoolean(value: any): boolean {
+    return value === true || value === 'true';
   }
 }

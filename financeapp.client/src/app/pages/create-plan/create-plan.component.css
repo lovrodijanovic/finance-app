@@ -13,3 +13,11 @@ button {
 .pointer {
     cursor: pointer;
 }
+
+.indented-section {
+  margin-left: 1.5rem;
+}
+
+.form-label.small {
+  font-size: 0.875rem;
+}
