@@ -2,7 +2,7 @@
 
 namespace FinanceApp.Server.Models.DTO;
 
-public class FinancialForm
+public class FinancialFormDto
 {
     public Guid UserId { get; set; }
 
@@ -10,19 +10,19 @@ public class FinancialForm
 
     public bool HasEmergencyFund { get; set; }
 
-    public EmergencyFund? EmergencyFund { get; set; }
+    public EmergencyFundDto? EmergencyFund { get; set; }
 
     public bool HasDebt { get; set; }
 
-    public IEnumerable<Debt>? Debts { get; set; }
+    public IEnumerable<DebtDto>? Debts { get; set; }
 
     public bool HasVoluntaryPensionInsurance { get; set; }
 
-    public VoluntaryPensionInsurance? VoluntaryPensionInsurance { get; set; }
+    public VoluntaryPensionInsuranceDto? VoluntaryPensionInsurance { get; set; }
 
     public bool HasInvestments { get; set; }
 
-    public IEnumerable<Investment>? Investments { get; set; }
+    public IEnumerable<InvestmentDto>? Investments { get; set; }
 
     public int RiskSensitivity { get; set; }
 

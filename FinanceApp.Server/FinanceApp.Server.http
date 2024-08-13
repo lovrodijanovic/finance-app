@@ -1,6 +1,1 @@
 @FinanceApp.Server_HostAddress = http://localhost:5149
-
-GET {{FinanceApp.Server_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

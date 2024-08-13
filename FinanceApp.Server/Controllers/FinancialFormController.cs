@@ -8,16 +8,40 @@ namespace FinanceApp.Server.Controllers;
 public class FinancialFormController : ControllerBase
 {
     private readonly FormService _formService;
+    private readonly LookupService _lookupService;
 
-    public FinancialFormController(FormService formService)
+    public FinancialFormController(FormService formService, LookupService lookupService)
     {
         _formService = formService;
+        _lookupService = lookupService;
     }
 
     [HttpPost("")]
-    public async Task<ActionResult<FinancialForm>> SubmitForm([FromBody] FinancialForm model)
+    public async Task<ActionResult<Guid>> SubmitForm([FromBody] FinancialFormDto model)
     {
         var result = await _formService.SubmitForm(model);
+
+        return Ok(new { FinancialStatusId = result} );
+    }
+
+    [HttpGet("{financialStatusId}")]
+    public async Task<ActionResult<FormResultsDto>> GetResults([FromRoute] Guid financialStatusId)
+    {
+        var result = await _formService.GetFormResults(financialStatusId);
+        return Ok(result);
+    }
+
+    [HttpGet("get-debt-types")]
+    public async Task<ActionResult<IEnumerable<DebtTypeDto>>> GetDebtTypes()
+    {
+        var result = await _lookupService.GetDebtTypes();
+        return Ok(result);
+    }
+
+    [HttpGet("get-investment-types")]
+    public async Task<ActionResult<IEnumerable<InvestmentTypeDto>>> GetInvestmentTypes()
+    {
+        var result = await _lookupService.GetInvestmentTypes();
         return Ok(result);
     }
 }

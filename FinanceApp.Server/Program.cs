@@ -1,11 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using FinanceApp.Server.Data;
+using FinanceApp.Server.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddScoped<FormService>();
+builder.Services.AddScoped<LookupService>();
 
 builder.Services.AddDbContext<DataContext>(
     o => o.UseNpgsql(builder.Configuration.GetConnectionString("FinanceDb"))
@@ -29,6 +32,10 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller}/{action=Index}/{id?}");
 
 app.MapControllers();
 
