@@ -1,9 +1,10 @@
 ﻿using FinanceApp.Server.Models.Definitions;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinanceApp.Server.Data;
 
-public class DataContext : DbContext
+public class DataContext : IdentityDbContext<User>
 {
     public DataContext(DbContextOptions<DataContext> options):
         base(options)
@@ -12,7 +13,10 @@ public class DataContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
         modelBuilder.UseSerialColumns();
+
+        modelBuilder.HasDefaultSchema("identity");
     }
 
     public DbSet<User> User { get; set; }

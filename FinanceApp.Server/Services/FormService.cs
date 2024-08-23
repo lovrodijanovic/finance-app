@@ -12,7 +12,7 @@ public class FormService : BaseService
         
     }
 
-    const decimal minimalVoluntaryPensionInsuranceForFullStimulus = 53.31m;
+    const decimal minimalVoluntaryPensionInsuranceForFullStimulus = 55.36m;
     const decimal smallEmergencyFundAmount = 1000;
 
     public async Task<Guid> SubmitForm(FinancialFormDto model)

@@ -1,6 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using FinanceApp.Server.Data;
 using FinanceApp.Server.Services;
+using Microsoft.AspNetCore.Identity;
+using FinanceApp.Server.Models.Definitions;
+using FinanceApp.Server.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +20,11 @@ builder.Services.AddDbContext<DataContext>(
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddAuthorization();
+builder.Services.AddAuthentication().AddCookie(IdentityConstants.ApplicationScheme).AddBearerToken(IdentityConstants.BearerScheme);
+
+builder.Services.AddIdentityCore<User>().AddEntityFrameworkStores<DataContext>().AddApiEndpoints();
+
 var app = builder.Build();
 
 app.UseDefaultFiles();
@@ -27,6 +35,8 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    app.ApplyMigrations();
 }
 
 app.UseHttpsRedirection();
@@ -38,6 +48,8 @@ app.MapControllerRoute(
     pattern: "{controller}/{action=Index}/{id?}");
 
 app.MapControllers();
+
+app.MapIdentityApi<User>();
 
 app.MapFallbackToFile("/index.html");
 
