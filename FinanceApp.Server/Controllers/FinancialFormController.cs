@@ -31,13 +31,6 @@ public class FinancialFormController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("get-debt-types")]
-    public async Task<ActionResult<IEnumerable<DebtTypeDto>>> GetDebtTypes()
-    {
-        var result = await _lookupService.GetDebtTypes();
-        return Ok(result);
-    }
-
     [HttpGet("get-investment-types")]
     public async Task<ActionResult<IEnumerable<InvestmentTypeDto>>> GetInvestmentTypes()
     {

@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { DebtType, FinancialForm, FormResult, InvestmentType } from '../shared/models/plan.model';
+import { FinancialForm, FormResult, InvestmentType } from '../shared/models/plan.model';
 import { Observable } from 'rxjs/internal/Observable';
 
 @Injectable({
@@ -27,10 +27,6 @@ export class FinancialFormService {
 
   public getResults(resultId: string): Observable<FormResult> {
     return this.http.get<FormResult>(this.baseUrl + `financialForm/${resultId}`)
-  }
-
-  public getDebtTypes(): Observable<DebtType[]> {
-    return this.http.get<DebtType[]>(this.baseUrl + `financialForm/get-debt-types`)
   }
 
   public getInvestmentTypes(): Observable<InvestmentType[]> {

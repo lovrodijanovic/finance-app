@@ -1,45 +1,18 @@
 export class Debt {
-  type: string;
-  principal: number;
+  debtName: string;
   interestRate: number;
-  maturityYears: number;
+  remainingBalance: number;
   monthlyContribution: number;
   constructor(
-    type: string = '',
-    principal: number = 0,
+    debtName: string = '',
+    remainingBalance: number = 0,
     interestRate: number = 0,
-    maturityYears: number = 0,
     monthlyContribution: number = 0
   ) {
-    this.type = type;
-    this.principal = principal;
+    this.debtName = debtName;
+    this.remainingBalance = remainingBalance;
     this.interestRate = interestRate;
-    this.maturityYears = maturityYears;
     this.monthlyContribution = monthlyContribution;
-  }
-}
-
-export class DebtType {
-  id: string;
-  name: string;
-  description: string;
-  abbreviation: string;
-  croatianName: string;
-  croatianDescription: string;
-  constructor(
-    id: string,
-    name: string,
-    description: string,
-    abbreviation: string,
-    croatianName: string,
-    croatianDescription: string
-  ) {
-    this.id = id;
-    this.name = name;
-    this.description = description;
-    this.abbreviation = abbreviation;
-    this.croatianName = croatianName;
-    this.croatianDescription = croatianDescription
   }
 }
 
@@ -137,8 +110,11 @@ export class FormResult {
   hasFullEmergencyFund: boolean;
   hasDebt: boolean;
   hasDebtsWithHighInterestRate: boolean;
+  highInterestRateDebtPayoffs: DebtPayoff[];
   hasDebtsWithMediumInterestRate: boolean;
+  mediumInterestRateDebtPayoffs: DebtPayoff[];
   hasDebtsWithLowInterestRate: boolean;
+  lowInterestRateDebtPayoffs: DebtPayoff[];
   hasVoluntaryPensionInsurance: boolean;
   isFullVoluntaryPensionInsuranceContribution: boolean;
   hasInvestments: boolean;
@@ -151,10 +127,21 @@ export class FormResult {
     this.hasFullEmergencyFund = model.hasFullEmergencyFund;
     this.hasDebt = model.hasDebt;
     this.hasDebtsWithHighInterestRate = model.hasDebtsWithHighInterestRate;
+    this.highInterestRateDebtPayoffs = model.highInterestRateDebtPayoffs;
     this.hasDebtsWithMediumInterestRate = model.hasDebtsWithMediumInterestRate;
+    this.mediumInterestRateDebtPayoffs = model.mediumInterestRateDebtPayoffs;
     this.hasDebtsWithLowInterestRate = model.hasDebtsWithLowInterestRate;
+    this.lowInterestRateDebtPayoffs = model.lowInterestRateDebtPayoffs;
     this.hasVoluntaryPensionInsurance = model.hasVoluntaryPensionInsurance;
     this.isFullVoluntaryPensionInsuranceContribution = model.isFullVoluntaryPensionInsuranceContribution;
     this.hasInvestments = model.hasInvestments;
   }
+}
+
+export interface DebtPayoff {
+  debtName: string;
+  interestRate: number;
+  numberOfPayments: number;
+  totalInterest: number;
+  totalPayments: number;
 }

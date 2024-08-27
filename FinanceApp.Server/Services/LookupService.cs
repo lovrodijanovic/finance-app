@@ -10,19 +10,6 @@ public class LookupService : BaseService
     {
     }
 
-    public async Task<IEnumerable<DebtTypeDto>> GetDebtTypes()
-    {
-        return await _ctx.DebtType.Select(x => new DebtTypeDto()
-        {
-            Id = x.Id,
-            Name = x.Name,
-            Description = x.Description,
-            Abbreviation = x.Abbreviation,
-            CroatianDescription = x.CroatianDescription,
-            CroatianName = x.CroatianName,
-        }).ToListAsync();
-    }
-
     public async Task<IEnumerable<InvestmentTypeDto>> GetInvestmentTypes()
     {
         return await _ctx.InvestmentType.Select(x => new InvestmentTypeDto()

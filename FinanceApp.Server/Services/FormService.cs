@@ -2,6 +2,8 @@
 using FinanceApp.Server.Models.Definitions;
 using FinanceApp.Server.Models.DTO;
 using Mapster;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 
 namespace FinanceApp.Server.Services;
 
@@ -64,10 +66,9 @@ public class FormService : BaseService
                     DateCreated = DateTime.UtcNow,
                     DateUpdated = DateTime.UtcNow,
                     FinancialStatusId = financialStatus.Id,
-                    Principal = debt.Principal,
-                    MaturityYears = debt.MaturityYears,
+                    DebtName = debt.DebtName,
+                    RemainingBalance = debt.RemainingBalance,
                     MonthlyContribution = debt.MonthlyContribution,
-                    DebtTypeId = debt.DebtType,
                     InterestRate = debt.InterestRate,
                 });
             }
@@ -110,8 +111,7 @@ public class FormService : BaseService
     public async Task<FormResultsDto> GetFormResults(Guid financialStatusId)
     {
         var financialStatus = _ctx.FinancialStatus.FirstOrDefault(x => x.Id == financialStatusId);
-        var debts = _ctx.Debt.Where(x => x.FinancialStatusId == financialStatusId); 
-        var investments = _ctx.Investment.Where(x => x.FinancialStatusId == financialStatusId);
+        var debts = _ctx.Debt.Where(x => x.FinancialStatusId == financialStatusId).ProjectToType<DebtDto>().ToList();
         var emergencyFund = _ctx.EmergencyFund.FirstOrDefault(x => x.FinancialStatusId == financialStatusId);
         var voluntaryPensionInsurance = _ctx.VoluntaryPensionInsurance.FirstOrDefault(x => x.FinancialStatusId == financialStatusId);
 
@@ -127,11 +127,26 @@ public class FormService : BaseService
         bool hasDebtsWithLowInterestRate = false;
         bool hasDebtsWithMediumInterestRate = false;
         bool hasDebtsWithHighInterestRate = false;
-        if (debts != null)
+        List<DebtPayoff> lowInterestRateDebtPayoffs = [];
+        List<DebtPayoff> mediumInterestRateDebtPayoffs = [];
+        List<DebtPayoff> highInterestRateDebtPayoffs = [];
+        if (debts != null && debts.Any())
         {
             hasDebtsWithLowInterestRate = debts.Any(x => x.InterestRate < 6);
             hasDebtsWithMediumInterestRate = debts.Any(x => x.InterestRate >= 6 && x.InterestRate < 8);
-            hasDebtsWithHighInterestRate = debts.Any(x => x.InterestRate > 8);
+            hasDebtsWithHighInterestRate = debts.Any(x => x.InterestRate >= 8);
+            if (hasDebtsWithLowInterestRate)
+            {
+                lowInterestRateDebtPayoffs = CalculateDebtPayoffs(debts.Where(x => x.InterestRate < 6)).OrderByDescending(x => x.InterestRate).ToList();
+            }
+            if (hasDebtsWithMediumInterestRate)
+            {
+                mediumInterestRateDebtPayoffs = CalculateDebtPayoffs(debts.Where(x => x.InterestRate >= 6 && x.InterestRate < 8)).OrderByDescending(x => x.InterestRate).ToList();
+            }
+            if (hasDebtsWithHighInterestRate)
+            {
+                highInterestRateDebtPayoffs = CalculateDebtPayoffs(debts.Where(x => x.InterestRate >= 8)).OrderByDescending(x => x.InterestRate).ToList();
+            }
         }
 
         var isFullVoluntaryPensionInsuranceContribution = false;
@@ -149,14 +164,73 @@ public class FormService : BaseService
             HasFullEmergencyFund = hasFullEmergencyFund,
             HasDebt = financialStatus.HasDebt,
             HasDebtsWithLowInterestRate = hasDebtsWithLowInterestRate,
+            LowInterestRateDebtPayoffs = lowInterestRateDebtPayoffs,
             HasDebtsWithMediumInterestRate = hasDebtsWithMediumInterestRate,
+            MediumInterestRateDebtPayoffs = mediumInterestRateDebtPayoffs,
             HasDebtsWithHighInterestRate = hasDebtsWithHighInterestRate,
+            HighInterestRateDebtPayoffs = highInterestRateDebtPayoffs,
             HasVoluntaryPensionInsurance = financialStatus.HasVoluntaryPensionInsurance,
             IsFullVoluntaryPensionInsuranceContribution = isFullVoluntaryPensionInsuranceContribution,
-            HasInvestments = financialStatus.HasInvestments
+            HasInvestments = financialStatus.HasInvestments,
         };
 
         return formResults;
+    }
+
+    private static List<DebtPayoff> CalculateDebtPayoffs(IEnumerable<DebtDto> debts)
+    {
+        var remainingDebts = debts.ToList();
+
+        foreach (var debt in remainingDebts)
+        {
+            debt.StartingBalance = debt.RemainingBalance;
+        }
+
+        List<DebtPayoff> debtPayoffs = new();
+
+        int month = 0;
+
+        while (remainingDebts.Count > 0)
+        {
+            month++;
+
+            foreach (var debt in remainingDebts.ToList())
+            {
+                decimal interestPayment = debt.RemainingBalance * (debt.InterestRate / 100 / 12);
+                debt.RemainingBalance += interestPayment;
+
+                if (debt.RemainingBalance <= debt.MonthlyContribution)
+                {
+                    decimal finalPayment = debt.RemainingBalance;
+                    debt.RemainingBalance = 0;
+
+                    debtPayoffs.Add(new DebtPayoff
+                    {
+                        DebtName = debt.DebtName,
+                        NumberOfPayments = month,
+                        InterestRate = debt.InterestRate,
+                        TotalPayments = Math.Round(debt.StartingBalance + debt.TotalInterest + interestPayment, 2),
+                        TotalInterest = Math.Round(debt.TotalInterest + interestPayment, 2)
+                    });
+
+                    var nextDebt = remainingDebts.OrderByDescending(d => d.InterestRate).FirstOrDefault();
+                    if (nextDebt != null)
+                    {
+                        nextDebt.MonthlyContribution += debt.MonthlyContribution;
+                    }
+
+                    remainingDebts.Remove(debt);
+                }
+                else
+                {
+                    debt.RemainingBalance -= debt.MonthlyContribution;
+
+                    debt.TotalInterest += interestPayment;
+                }
+            }
+        }
+
+        return debtPayoffs;
     }
 
     private static int CalculateFinancialScore(FinancialFormDto model)

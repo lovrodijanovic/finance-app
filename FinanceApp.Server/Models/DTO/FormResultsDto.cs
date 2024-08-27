@@ -10,9 +10,15 @@ public class FormResultsDto
 
     public bool HasDebtsWithHighInterestRate { get; set; }
 
+    public List<DebtPayoff>? HighInterestRateDebtPayoffs { get; set; }
+
     public bool HasDebtsWithMediumInterestRate { get; set; }
 
+    public List<DebtPayoff>? MediumInterestRateDebtPayoffs { get; set; }
+
     public bool HasDebtsWithLowInterestRate { get; set; }
+
+    public List<DebtPayoff>? LowInterestRateDebtPayoffs { get; set; }
 
     public bool HasEmergencyFund { get; set; }
 
@@ -25,4 +31,17 @@ public class FormResultsDto
     public bool IsFullVoluntaryPensionInsuranceContribution { get; set; }
 
     public bool HasInvestments { get; set; }
+}
+
+public class DebtPayoff
+{
+    public string DebtName { get; set; } = "";
+
+    public decimal NumberOfPayments { get; set; }
+
+    public decimal InterestRate { get; set; }
+
+    public decimal TotalInterest { get; set; }
+
+    public decimal TotalPayments { get; set; }
 }

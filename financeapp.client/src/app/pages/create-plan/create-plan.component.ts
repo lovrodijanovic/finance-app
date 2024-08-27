@@ -9,7 +9,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { DebtType, InvestmentType } from '../../shared/models/plan.model';
+import { InvestmentType } from '../../shared/models/plan.model';
 import { FinancialFormService } from '../../services/financial-form.service';
 
 @Component({
@@ -20,7 +20,6 @@ import { FinancialFormService } from '../../services/financial-form.service';
   styleUrls: ['./create-plan.component.css'],
 })
 export class CreatePlanComponent {
-  public debtTypes: DebtType[] = [];
   public investmentTypes: InvestmentType[] = [];
 
   formGroup: FormGroup;
@@ -37,8 +36,8 @@ export class CreatePlanComponent {
 
       hasEmergencyFund: [null],
       emergencyFund: this.formBuilder.group({
-        amount: [null],
-        monthlyContribution: [null],
+        amount: [null, Validators.required],
+        monthlyContribution: [null, Validators.required],
       }),
 
       hasDebt: [null, Validators.required],
@@ -46,8 +45,8 @@ export class CreatePlanComponent {
 
       hasVoluntaryPensionInsurance: [null, Validators.required],
       voluntaryPensionInsurance: this.formBuilder.group({
-        amount: [null],
-        monthlyContribution: [null],
+        amount: [null, Validators.required],
+        monthlyContribution: [null, Validators.required],
       }),
 
       hasInvestments: [null, Validators.required],
@@ -77,13 +76,6 @@ export class CreatePlanComponent {
     this.formGroup.get('hasEmergencyFund')?.valueChanges.subscribe(value => {
       this.toggleEmergencyFund(value);
     });
-
-    this.financialFormService.getDebtTypes().subscribe(
-      result => {
-        this.debtTypes = result;
-      },
-      error => console.error(error)
-    );
 
     this.financialFormService.getInvestmentTypes().subscribe(
       result => {
@@ -132,9 +124,10 @@ export class CreatePlanComponent {
   addDebt() {
     this.debts.push(
       this.formBuilder.group({
-        debtType: [this.debtTypes[0]?.id || ''],
-        amount: [null],
+        debtName: [null],
         interestRate: [null],
+        monthlyContribution: [null],
+        remainingBalance: [null]
       })
     );
   }

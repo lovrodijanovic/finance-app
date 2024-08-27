@@ -9,16 +9,11 @@ public class Debt : BaseEntity
     [ForeignKey("FinancialStatusId")]
     public virtual FinancialStatus? FinancialStatus { get; set;}
 
-    public Guid DebtTypeId;
+    public string DebtName { get; set; } = "";
 
-    [ForeignKey("DebtTypeId")]
-    public virtual DebtType? DebtType { get; set; }
-
-    public decimal Principal { get; set; }
+    public decimal RemainingBalance { get; set; }
 
     public decimal InterestRate { get; set; }
-
-    public int MaturityYears { get; set; }
 
     public decimal MonthlyContribution { get; set; }
 }

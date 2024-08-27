@@ -23,8 +23,11 @@ export class PlanComponent implements OnInit {
     hasBudget: false,
     hasDebt: false,
     hasDebtsWithHighInterestRate: false,
+    highInterestRateDebtPayoffs: [],
     hasDebtsWithMediumInterestRate: false,
+    mediumInterestRateDebtPayoffs: [],
     hasDebtsWithLowInterestRate: false,
+    lowInterestRateDebtPayoffs: [],
     hasEmergencyFund: false,
     hasFullEmergencyFund: false,
     hasSmallEmergencyFund: false,
@@ -59,5 +62,16 @@ export class PlanComponent implements OnInit {
         }
       );
     }
+  }
+
+  monthsToYears(numberOfPayments: number): string {
+    const years = Math.floor(numberOfPayments / 12);
+    const months = numberOfPayments % 12;
+
+    if (numberOfPayments <= 12) {
+      return ``;
+    }
+    else
+      return `${years} godina${years > 0 && months > 0 ? ' i ' : ''}${months > 0 ? months + ' mjeseci' : ''}`;
   }
 }

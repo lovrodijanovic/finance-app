@@ -23,8 +23,6 @@ public class DataContext : IdentityDbContext<User>
 
     public DbSet<Debt> Debt { get; set; }
 
-    public DbSet<DebtType> DebtType { get; set; }
-
     public DbSet<EmergencyFund> EmergencyFund { get; set; }
 
     public DbSet<FinancialStatus> FinancialStatus { get; set; }

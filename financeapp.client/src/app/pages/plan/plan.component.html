@@ -24,7 +24,32 @@
   <div class="row" *ngIf="financialFormResults?.hasDebtsWithHighInterestRate">
     <div class="col-12">
       <h4>Dugovi s visokom kamatnom stopom</h4>
-      <p>TODO</p>
+      <p>Dugove s visokom kamatnom stopom je potrebno što hitnije odplatiti. Preporučamo odplatu ovim redom, koji osigurava plaćanje najmanje moguće kamate:</p>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Redosljed</th>
+            <th>Dug</th>
+            <th>Razdoblje plačanja</th>
+            <th>Ukupno kamata</th>
+            <th>Ukupno plaćanje</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let debtPayoff of financialFormResults?.highInterestRateDebtPayoffs; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{debtPayoff.debtName}}</td>
+            <td>
+              {{debtPayoff.numberOfPayments}} mjeseci
+              <span *ngIf="monthsToYears(debtPayoff.numberOfPayments)">
+                ({{monthsToYears(debtPayoff.numberOfPayments)}})
+              </span>
+            </td>
+            <td>{{debtPayoff.totalInterest}}</td>
+            <td>{{debtPayoff.totalPayments}}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
   <div class="row" *ngIf="!financialFormResults?.hasEmergencyFund || financialFormResults?.hasSmallEmergencyFund">
@@ -36,16 +61,41 @@
   <div class="row" *ngIf="financialFormResults?.hasDebtsWithMediumInterestRate">
     <div class="col-12">
       <h4>Dugovi sa srednje visokom kamatnom stopom</h4>
-      <p>TODO</p>
+      <p>Kada napunite hitni fond, iduće na redu su dugovi sa srednjom kamatnom stopom. Preporučamo odplatu ovim redom, koji osigurava plaćanje najmanje moguće kamate:</p>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Redosljed</th>
+            <th>Dug</th>
+            <th>Razdoblje plačanja</th>
+            <th>Ukupno kamata</th>
+            <th>Ukupno plaćanje</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let debtPayoff of financialFormResults?.mediumInterestRateDebtPayoffs; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{debtPayoff.debtName}}</td>
+            <td>
+              {{debtPayoff.numberOfPayments}} mjeseci
+              <span *ngIf="monthsToYears(debtPayoff.numberOfPayments)">
+                ({{monthsToYears(debtPayoff.numberOfPayments)}})
+              </span>
+            </td>
+            <td>{{debtPayoff.totalInterest}}</td>
+            <td>{{debtPayoff.totalPayments}}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
   <div class="row" *ngIf="!financialFormResults?.hasVoluntaryPensionInsurance || !financialFormResults?.isFullVoluntaryPensionInsuranceContribution">
     <div class="col-12">
       <h4>Dobrovoljno mirovinsko osiguranje</h4>
       <p>
-        Pored obveznog mirovinskog osiguranja svaka osoba sa prebivalištem u Republici Hrvatskoj može dodatno štedjeti u dobrovoljnom mirovinskom fondu (III. stup) kojim upravlja mirovinsko društvo.
+        Pored obveznog mirovinskog osiguranja svaka osoba s prebivalištem u Republici Hrvatskoj može dodatno štedjeti u dobrovoljnom mirovinskom fondu (III. stup) kojim upravlja mirovinsko društvo.
         Država stimulira ulaganje u dobrovoljnu mirovinsku štednju s dodatnih 15% na uplaćena sredstva u jednoj godini do ukupno uplaćenog iznosa od 663,61 EUR-a godišnje. Što znači da bi u potpunosti
-        iskoristili ovaj poticaj, preporuća se uplaćivati najmanje 55.31€ mjesečno u dobrovoljno mirovinsko osiguranje.
+        iskoristili ovaj poticaj, preporuča se uplaćivati najmanje 55.31€ mjesečno u dobrovoljno mirovinsko osiguranje.
       </p>
     </div>
   </div>
@@ -58,7 +108,32 @@
   <div class="row" *ngIf="financialFormResults?.hasDebtsWithLowInterestRate">
     <div class="col-12">
       <h4>Dugovi s niskom kamatnom stopom</h4>
-      <p>TODO</p>
+      <p>Ostali su samo dugovi s niskom kamatnom stopom. Preporučamo odplatu ovim redom, koji osigurava plaćanje najmanje moguće kamate:</p>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Redosljed</th>
+            <th>Dug</th>
+            <th>Razdoblje plačanja</th>
+            <th>Ukupno kamata</th>
+            <th>Ukupno plaćanje</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let debtPayoff of financialFormResults?.lowInterestRateDebtPayoffs; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{debtPayoff.debtName}}</td>
+            <td>
+              {{debtPayoff.numberOfPayments}} mjeseci
+              <span *ngIf="monthsToYears(debtPayoff.numberOfPayments)">
+                ({{monthsToYears(debtPayoff.numberOfPayments)}})
+              </span>
+            </td>
+            <td>{{debtPayoff.totalInterest}}</td>
+            <td>{{debtPayoff.totalPayments}}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
   <div class="row">
