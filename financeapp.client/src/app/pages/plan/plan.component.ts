@@ -33,7 +33,10 @@ export class PlanComponent implements OnInit {
     hasSmallEmergencyFund: false,
     hasInvestments: false,
     hasVoluntaryPensionInsurance: false,
-    isFullVoluntaryPensionInsuranceContribution: false
+    isFullVoluntaryPensionInsuranceContribution: false,
+    investmentAmountSuggestion: 0,
+    equityPercentageSuggestion: 0,
+    hasLowInvestments: false
   }
 
   constructor(public financialFormService: FinancialFormService, private route: ActivatedRoute) {

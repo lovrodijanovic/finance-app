@@ -27,4 +27,6 @@ public class FinancialFormDto
     public int RiskSensitivity { get; set; }
 
     public decimal NetEarnings { get; set; }
+
+    public int Age { get; set; }
 }

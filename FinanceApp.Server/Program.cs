@@ -21,9 +21,18 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddAuthorization();
-builder.Services.AddAuthentication().AddCookie(IdentityConstants.ApplicationScheme).AddBearerToken(IdentityConstants.BearerScheme);
 
-builder.Services.AddIdentityCore<User>().AddEntityFrameworkStores<DataContext>().AddApiEndpoints();
+builder.Services.AddIdentityApiEndpoints<User>()
+    .AddEntityFrameworkStores<DataContext>();
+
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireDigit = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequiredLength = 4;
+});
+
 
 var app = builder.Build();
 
@@ -41,7 +50,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
@@ -50,6 +58,9 @@ app.MapControllerRoute(
 app.MapControllers();
 
 app.MapIdentityApi<User>();
+app.MapGroup("/account").MapIdentityApi<User>();
+
+app.UseAuthorization();
 
 app.MapFallbackToFile("/index.html");
 

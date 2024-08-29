@@ -18,16 +18,13 @@ export class Debt {
 
 export class Investment {
   investmentType: string;
-  amount: number;
   monthlyContribution: number;
 
   constructor(
     investmentType: string = '',
-    amount: number = 0,
     monthlyContribution: number = 0
   ) {
     this.investmentType = investmentType;
-    this.amount = amount;
     this.monthlyContribution = monthlyContribution;
   }
 }
@@ -66,15 +63,14 @@ export class EmergencyFund {
 }
 
 export class VoluntaryPensionInsurance {
-  amount: number;
   monthlyContribution: number;
   constructor(amount: number = 0, monthlyContribution: number = 0) {
-    this.amount = amount;
     this.monthlyContribution = monthlyContribution;
   }
 }
 
 export class FinancialForm {
+  userId: string;
   hasBudget: boolean;
   hasEmergencyFund: boolean;
   emergencyFund: EmergencyFund;
@@ -86,8 +82,10 @@ export class FinancialForm {
   investments: Investment[];
   riskSensitivity: number;
   netEarnings: number;
+  age: number;
 
   constructor(model: any) {
+    this.userId = model.userId;
     this.hasBudget = model.hasBudget;
     this.hasEmergencyFund = model.hasEmergencyFund;
     this.emergencyFund = model.emergencyFund;
@@ -99,6 +97,7 @@ export class FinancialForm {
     this.investments = model.investments;
     this.riskSensitivity = model.riskSensitivity;
     this.netEarnings = model.netEarnings;
+    this.age = model.age;
   }
 }
 
@@ -118,6 +117,9 @@ export class FormResult {
   hasVoluntaryPensionInsurance: boolean;
   isFullVoluntaryPensionInsuranceContribution: boolean;
   hasInvestments: boolean;
+  investmentAmountSuggestion: number;
+  equityPercentageSuggestion: number;
+  hasLowInvestments: boolean;
 
   constructor(model: any) {
     this.financialScore = model.financialScore;
@@ -135,6 +137,9 @@ export class FormResult {
     this.hasVoluntaryPensionInsurance = model.hasVoluntaryPensionInsurance;
     this.isFullVoluntaryPensionInsuranceContribution = model.isFullVoluntaryPensionInsuranceContribution;
     this.hasInvestments = model.hasInvestments;
+    this.investmentAmountSuggestion = model.investmentAmountSuggestion;
+    this.equityPercentageSuggestion = model.equityPercentageSuggestion;
+    this.hasLowInvestments = model.hasLowInvestments;
   }
 }
 

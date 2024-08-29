@@ -4,6 +4,8 @@ namespace FinanceApp.Server.Models.Definitions;
 
 public class FinancialStatus : BaseEntity
 {
+    public string UserId { get; set; } = "";
+
     [ForeignKey("UserId")]
     public virtual User? User { get; set; }
 
@@ -20,6 +22,8 @@ public class FinancialStatus : BaseEntity
     public int RiskSensitivity { get; set; }
 
     public decimal NetEarnings { get; set; }
+
+    public int Age { get; set; }
 
     public int FinancialScore { get; set; }
 }

@@ -2,21 +2,18 @@
     <div class="row justify-content-center ">
         <div class="col-sm-6 col-md-6 col-xl-3">
             <h2 class="text-center pb-3">Prijava</h2>
-            <form>
-                <div class="form-group pb-2">
-                    <label for="emailInput">Email adresa</label>
-                    <input type="email" class="form-control" id="emailInput" placeholder="Unesi email">
-                </div>
-                <div class="form-group pb-2">
-                    <label for="passwordInput">Lozinka</label>
-                    <input type="password" class="form-control" id="passwordInput" placeholder="Unesi lozinku ">
-                </div>
-                <div class="form-group pb-3 text-right">
-                    <a href="/reset-password" class="">Zaboravio/la si lozinku?</a>
-                </div>
-                <div class="d-flex justify-content-center">
-                    <button type="submit" class="btn btn-primary btn-block w-100">Prijavi se</button>
-                </div>
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+              <div class="form-group pb-2">
+                <label for="emailInput">Email adresa</label>
+                <input type="email" class="form-control" id="emailInput" placeholder="Unesi email" formControlName="email">
+              </div>
+              <div class="form-group pb-2">
+                <label for="passwordInput">Lozinka</label>
+                <input type="password" class="form-control" id="passwordInput" placeholder="Unesi lozinku" formControlName="password">
+              </div>
+              <div class="d-flex justify-content-center">
+                  <button type="submit" class="btn btn-primary btn-block w-100">Prijavi se</button>
+              </div>
             </form>
         </div>
     </div>

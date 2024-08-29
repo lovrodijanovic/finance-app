@@ -9,11 +9,17 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto text-end">
-          <li class="nav-item">
-            <a class="nav-link" href="/login">Login</a>
+          <li class="nav-item" *ngIf="!isLoggedIn">
+            <a class="nav-link" href="/login">Prijava</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/register">Register</a>
+          <li class="nav-item" *ngIf="!isLoggedIn">
+            <a class="nav-link" href="/register">Registracija</a>
+          </li>
+          <li class="nav-item" *ngIf="isLoggedIn">
+            <a class="nav-link" href="/history">Moja povijest</a>
+          </li>
+          <li class="nav-item" *ngIf="isLoggedIn">
+            <button class="nav-link" (click)="logOut()">Odjava</button>
           </li>
         </ul>
       </div>

@@ -14,7 +14,5 @@ public class Investment : BaseEntity
     [ForeignKey("InvestmentTypeId")]
     public virtual InvestmentType? InvestmentType { get; set; }
 
-    public decimal Amount { get; set; }
-
     public decimal MonthlyContribution { get; set; }
 }

@@ -1,8 +1,23 @@
 <div class="container">
   <h2 class="text-center">Rezultat</h2>
   <div class="row">
-    <div class="col-12">
-      <p>Vaša financijska ocjena je: <strong>{{financialFormResults.financialScore}}/10</strong></p>
+    <div class="col-12" style="text-align: center; padding: 20px;">
+      <p style="font-size: 1.2rem; color: #555;">
+        Vaša financijska ocjena je:
+      </p>
+      <p style="font-size: 1.8rem; font-weight: bold; color: #007bff;">
+        {{financialFormResults.financialScore/2}}/5
+      </p>
+      <div class="stars" style="font-size: 1.5rem; color: #FFD700;">
+        <div class="star-rating" style="display: inline-block; position: relative; font-size: 2rem; color: #FFD700;">
+          <div class="star-filled" style="width: calc({{financialFormResults.financialScore}} * 10%); overflow: hidden; white-space: nowrap; position: absolute; top: 0; left: 0;">
+            ★★★★★
+          </div>
+          <div class="star-empty" style="color: #ddd;">
+            ★★★★★
+          </div>
+        </div>
+      </div>
     </div>
     <div class="col-12">
       <h3>Slijedite redom ove korake i poboljšajte svoje financijsko zdravlje:</h3>
@@ -15,9 +30,9 @@
       <p>Vođenje osobnog proračuna je neizostavni prvi korak u vašoj financijskoj budućnosti. On nam pomaže vidjeti gdje nam cure vrijedi euri i u kojem dijelu se možemo poboljšati. Vođenje osobnog proračuna je vrlo jednostavno: zapisivanjem svake potrošnje i primitka vrlo lako pratimo tijek našeg novca.</p>
     </div>
   </div>
-  <div class="row" *ngIf="!financialFormResults?.hasEmergencyFund">
+  <div class="row" *ngIf="!financialFormResults?.hasEmergencyFund || !financialFormResults?.hasSmallEmergencyFund">
     <div class="col-12">
-      <h4>Mali hitni Fond</h4>
+      <h4>Mali hitni fond</h4>
       <p>Prije investiranja, odplaćivanja dugova i štednje za budućnost bitno je misliti na krizne situacije. Za ovo služi mali hitni fond. Preporuča se količina od oko 1000€ lako dostupnog novca (u gotovini, na bankovnom računu, u neoročenoj štednji itd.)</p>
     </div>
   </div>
@@ -52,7 +67,7 @@
       </table>
     </div>
   </div>
-  <div class="row" *ngIf="!financialFormResults?.hasEmergencyFund || financialFormResults?.hasSmallEmergencyFund">
+  <div class="row" *ngIf="!financialFormResults?.hasEmergencyFund || !financialFormResults?.hasFullEmergencyFund">
     <div class="col-12">
       <h4>Puni hitni fond</h4>
       <p>Imate najmanje 1000€ za krizne situacije. Odlično! Sada je vrijeme za povećati iznos vašeg hitnog fonda u slučaju gubitka zaposlenja ili drugih izvora zarade. Ovaj iznos pomoći će vam prebroditi teška razdoblja s minimalnim stresom oko novca. Preporuča se iznos od 3 do 6 mjesečnih troškova za puni hitni fond.</p>
@@ -102,7 +117,20 @@
   <div class="row" *ngIf="!financialFormResults?.hasInvestments">
     <div class="col-12">
       <h4>Ulaganje</h4>
-      <p>TODO</p>
+      <p>
+        Predlaže se ulaganje 20% mjesečnih primanja, što bi u Vašem slučaju, uz 3. stup, iznosilo {{financialFormResults?.investmentAmountSuggestion}} eura mjesečno.
+        S obzirom na Vašu dob i osjetljivost na rizik, predlaže se ulagati {{financialFormResults?.equityPercentageSuggestion}}% u dionice, a {{100 - (financialFormResults?.equityPercentageSuggestion ?? 0)}}% u obveznice.
+      </p>
+    </div>
+  </div>
+  <div class="row" *ngIf="financialFormResults?.hasInvestments && financialFormResults.hasLowInvestments">
+    <div class="col-12">
+      <h4>Ulaganje</h4>
+      <p>
+        Vaše ulaganje je pohvalno, no za prosperitetniju budućnost, predlaže se da ulažete više, tako jest 20% mjesečnih primanja, što bi iznosilo
+         {{financialFormResults?.investmentAmountSuggestion}} eura mjesečno.
+        S obzirom na Vašu dob i osjetljivost na rizik, predlaže se ulagati {{financialFormResults?.equityPercentageSuggestion}}% u dionice, a {{100 - (financialFormResults?.equityPercentageSuggestion ?? 0)}}% u obveznice.
+      </p>
     </div>
   </div>
   <div class="row" *ngIf="financialFormResults?.hasDebtsWithLowInterestRate">

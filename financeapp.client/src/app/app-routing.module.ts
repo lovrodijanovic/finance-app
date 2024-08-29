@@ -2,10 +2,10 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
-import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 import { LandingComponent } from './pages/landing/landing.component';
 import { CreatePlanComponent } from './pages/create-plan/create-plan.component';
 import { PlanComponent } from './pages/plan/plan.component';
+import { HistoryComponent } from './pages/history/history.component';
 
 const routes: Routes = [
   {
@@ -15,10 +15,6 @@ const routes: Routes = [
   {
     path: 'register',
     component: RegisterComponent
-  },
-  {
-    path: 'reset-password',
-    component: ResetPasswordComponent
   },
   {
     path: 'create-plan',
@@ -33,6 +29,10 @@ const routes: Routes = [
     component: PlanComponent
   },
   {
+    path: 'history',
+    component: HistoryComponent
+  },
+  {
     path: '',
     component: LandingComponent,
   },
@@ -43,7 +43,10 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {
+    scrollPositionRestoration: 'top'
+  })
+  ],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

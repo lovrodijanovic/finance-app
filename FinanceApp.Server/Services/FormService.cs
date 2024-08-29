@@ -2,8 +2,6 @@
 using FinanceApp.Server.Models.Definitions;
 using FinanceApp.Server.Models.DTO;
 using Mapster;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
 
 namespace FinanceApp.Server.Services;
 
@@ -24,6 +22,7 @@ public class FormService : BaseService
             Id = Guid.NewGuid(),
             DateCreated = DateTime.UtcNow,
             DateUpdated = DateTime.UtcNow,
+            UserId = model.UserId.ToString(),
             HasBudget = model.HasBudget,
             HasDebt = model.HasDebt,
             HasInvestments = model.HasInvestments,
@@ -31,6 +30,7 @@ public class FormService : BaseService
             HasVoluntaryPensionInsurance = model.HasVoluntaryPensionInsurance,
             NetEarnings = model.NetEarnings,
             RiskSensitivity = model.RiskSensitivity,
+            Age = model.Age,
             FinancialScore = CalculateFinancialScore(model)
         };
 
@@ -47,7 +47,6 @@ public class FormService : BaseService
                     DateCreated = DateTime.UtcNow,
                     DateUpdated = DateTime.UtcNow,
                     FinancialStatusId = financialStatus.Id,
-                    Amount = investment.Amount,
                     MonthlyContribution = investment.MonthlyContribution,
                     InvestmentTypeId = investment.InvestmentType
                 });  
@@ -97,7 +96,6 @@ public class FormService : BaseService
                 DateCreated = DateTime.UtcNow,
                 DateUpdated = DateTime.UtcNow,
                 FinancialStatusId = financialStatus.Id,
-                Amount = model.VoluntaryPensionInsurance.Amount,
                 MonthlyContribution = model.VoluntaryPensionInsurance.MonthlyContribution
             };
             await _ctx.VoluntaryPensionInsurance.AddAsync(voluntaryPensionInsurance);
@@ -155,6 +153,39 @@ public class FormService : BaseService
             isFullVoluntaryPensionInsuranceContribution = voluntaryPensionInsurance.MonthlyContribution >= minimalVoluntaryPensionInsuranceForFullStimulus;
         }
 
+        decimal investmentAmountSuggestion = 0;
+        decimal equityPercentageSuggestion = 0;
+        bool hasLowInvestments = false;
+        if (financialStatus != null)
+        {
+            var voluntaryPensionInsuranceMonthlyContribution = voluntaryPensionInsurance != null ? voluntaryPensionInsurance.MonthlyContribution : 0;
+            investmentAmountSuggestion = financialStatus.NetEarnings * 0.2m - voluntaryPensionInsuranceMonthlyContribution;
+            
+            if (financialStatus.RiskSensitivity > 3)
+            {
+                equityPercentageSuggestion = 120 - financialStatus.Age;
+            }
+            else if (financialStatus.RiskSensitivity == 3)
+            {
+                equityPercentageSuggestion = 110 - financialStatus.Age;
+            }
+            else if (financialStatus.RiskSensitivity < 3)
+            {
+                equityPercentageSuggestion = 100 - financialStatus.Age;
+            }
+
+            if (financialStatus.HasInvestments && _ctx.Investment.Any(x => x.FinancialStatusId == financialStatusId))
+            {
+                var investments = _ctx.Investment.Where(x => x.FinancialStatusId == financialStatusId);
+                var investmentSum = investments.Sum(x => x.MonthlyContribution);
+
+                if (investmentSum < financialStatus.NetEarnings * 0.2m)
+                {
+                    hasLowInvestments = true;
+                }
+            }
+        }
+  
         var formResults = new FormResultsDto
         {
             FinancialScore = financialStatus.FinancialScore,
@@ -172,9 +203,32 @@ public class FormService : BaseService
             HasVoluntaryPensionInsurance = financialStatus.HasVoluntaryPensionInsurance,
             IsFullVoluntaryPensionInsuranceContribution = isFullVoluntaryPensionInsuranceContribution,
             HasInvestments = financialStatus.HasInvestments,
+            InvestmentAmountSuggestion = investmentAmountSuggestion,
+            EquityPercentageSuggestion = equityPercentageSuggestion,
+            HasLowInvestments = hasLowInvestments
         };
 
         return formResults;
+    }
+
+    public async Task<List<FinancialStatusHistoryDto>> GetFinancialStatusHistory(string userId)
+    {
+        var financialStatuses = _ctx.FinancialStatus.Where(x => x.UserId == userId).ToList();
+
+        var result = new List<FinancialStatusHistoryDto>();
+        foreach (var financialStatus in financialStatuses)
+        {
+            result.Add(new FinancialStatusHistoryDto()
+            {
+                Age = financialStatus.Age,
+                DateCreated = financialStatus.DateCreated,
+                FinancialScore = financialStatus.FinancialScore,
+                NetEarnings = financialStatus.NetEarnings,
+                RiskSensitivity = financialStatus.RiskSensitivity
+            });
+        }
+
+        return result;
     }
 
     private static List<DebtPayoff> CalculateDebtPayoffs(IEnumerable<DebtDto> debts)
@@ -198,6 +252,11 @@ public class FormService : BaseService
             {
                 decimal interestPayment = debt.RemainingBalance * (debt.InterestRate / 100 / 12);
                 debt.RemainingBalance += interestPayment;
+
+                if (debt.MonthlyContribution <= interestPayment)
+                {
+                    throw new UnpayableDebtException(debt.DebtName);
+                }
 
                 if (debt.RemainingBalance <= debt.MonthlyContribution)
                 {
@@ -224,7 +283,6 @@ public class FormService : BaseService
                 else
                 {
                     debt.RemainingBalance -= debt.MonthlyContribution;
-
                     debt.TotalInterest += interestPayment;
                 }
             }
@@ -284,7 +342,7 @@ public class FormService : BaseService
         {
             score -= 2;
         }
-        else if (model.HasVoluntaryPensionInsurance && model.VoluntaryPensionInsurance!.Amount < minimalVoluntaryPensionInsuranceForFullStimulus)
+        else if (model.HasVoluntaryPensionInsurance && model.VoluntaryPensionInsurance!.MonthlyContribution < minimalVoluntaryPensionInsuranceForFullStimulus)
         {
             score -= 1;
         }
@@ -295,5 +353,16 @@ public class FormService : BaseService
         }
 
         return score >= 0 ? score : 0;
+    }
+}
+
+public class UnpayableDebtException : Exception
+{
+    public string DebtName { get; }
+
+    public UnpayableDebtException(string debtName)
+        : base($"Dug '{debtName}' ne može biti plaćen jer je kamata svaki mjesec veća od mjesečne uplate.")
+    {
+        DebtName = debtName;
     }
 }

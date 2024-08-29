@@ -34,14 +34,15 @@
           <div *ngIf="formGroup.get('hasEmergencyFund')?.value === true" class="mt-3 p-3 border rounded shadow-sm">
             <div [formGroup]="formGroup" formGroupName="emergencyFund">
               <label for="emergencyFundAmount" class="form-label small">Unesite iznos hitnog fonda (EUR)<span class="text-danger"> *</span></label>
-              <input type="number" class="form-control mb-3" id="amount" formControlName="amount" placeholder="Unesite iznos fonda" />
+              <input type="number" class="form-control mb-3" id="amount" formControlName="amount" placeholder="Unesite iznos fonda" min="0" />
               <div class="text-danger" *ngIf="formGroup.get('emergencyFund.amount')?.invalid && (formGroup.get('emergencyFund.amount')?.touched || formGroup.get('emergencyFund.amount')?.dirty)">
                 <span *ngIf="formGroup.get('emergencyFund.amount')?.errors?.['required']">Obavezno polje</span>
               </div>
               <label for="monthlyContribution" class="form-label small">Mjesečni doprinos (EUR)<span class="text-danger"> *</span></label>
-              <input type="number" class="form-control" id="monthlyContribution" formControlName="monthlyContribution" placeholder="Unesite mjesečni doprinos" />
+              <input type="number" class="form-control" id="monthlyContribution" formControlName="monthlyContribution" placeholder="Unesite mjesečni doprinos" min="0" />
               <div class="text-danger" *ngIf="formGroup.get('emergencyFund.monthlyContribution')?.invalid && (formGroup.get('emergencyFund.monthlyContribution')?.touched || formGroup.get('emergencyFund.monthlyContribution')?.dirty)">
                 <span *ngIf="formGroup.get('emergencyFund.monthlyContribution')?.errors?.['required']">Obavezno polje</span>
+                <span *ngIf="formGroup.controls['emergencyFund.monthlyContribution'].errors?.['min']">Nisu dozvoljene negativne vrijednosti</span>
               </div>
             </div>
           </div>
@@ -83,6 +84,9 @@
                 </div>
               </div>
             </div>
+            <div *ngIf="!allDebtsPayable()" class="text-danger small">
+              Mjesečna plaćanja nisu dovoljna za pokrivanje kamate.
+            </div>
             <div class="d-flex justify-content-start">
               <button type="button" class="btn btn-secondary mt-2" (click)="addDebt()">Dodaj dug</button>
             </div>
@@ -102,11 +106,6 @@
           </div>
           <div *ngIf="formGroup.get('hasVoluntaryPensionInsurance')?.value === true" class="mt-3 p-3 border rounded shadow-sm">
             <div [formGroup]="formGroup" formGroupName="voluntaryPensionInsurance">
-              <label for="amount" class="form-label small">Koliko imate ušteđeno u dobrovoljnom mirovinskom osiguranju? (EUR)<span class="text-danger"> *</span></label>
-              <input type="number" class="form-control mb-3" id="amount" formControlName="amount" placeholder="Unesite iznos fonda" />
-              <div class="text-danger" *ngIf="formGroup.get('voluntaryPensionInsurance.amount')?.invalid && (formGroup.get('voluntaryPensionInsurance.amount')?.touched || formGroup.get('voluntaryPensionInsurance.amount')?.dirty)">
-                <span *ngIf="formGroup.get('voluntaryPensionInsurance.amount')?.errors?.['required']">Obavezno polje</span>
-              </div>
               <label for="monthlyContribution" class="form-label small">Mjesečni doprinos (EUR)<span class="text-danger"> *</span></label>
               <input type="number" class="form-control" id="monthlyContribution" formControlName="monthlyContribution" placeholder="Unesite mjesečni doprinos" />
               <div class="text-danger" *ngIf="formGroup.get('voluntaryPensionInsurance.monthlyContribution')?.invalid && (formGroup.get('voluntaryPensionInsurance.monthlyContribution')?.touched || formGroup.get('voluntaryPensionInsurance.monthlyContribution')?.dirty)">
@@ -139,10 +138,6 @@
                   <select class="form-control" id="investmentType" formControlName="investmentType">
                     <option *ngFor="let type of investmentTypes" [value]="type.id">{{ type.croatianName }}</option>
                   </select>
-                </div>
-                <div class="form-group col-4">
-                  <label for="amount" class="form-label small">Ukupan iznos</label>
-                  <input type="number" class="form-control" id="amount" formControlName="amount" placeholder="Unesite ukupan iznos" />
                 </div>
                 <div class="form-group col-4">
                   <label for="monthlyContribution" class="form-label small">Mjesečni doprinos (EUR)</label>
@@ -179,11 +174,20 @@
               <span *ngIf="formGroup.controls['netEarnings'].errors?.['required']">Obavezno polje</span>
             </div>
           </div>
+
+          <!-- Age -->
+          <div class="mb-3">
+            <label for="age" class="form-label">Dob<span class="text-danger"> *</span>:</label>
+            <input type="number" class="form-control" id="age" formControlName="age" placeholder="Unesite dob" />
+            <div class="text-danger" *ngIf="formGroup.controls['age'].invalid && (formGroup.controls['age'].touched || formGroup.controls['age'].dirty)">
+              <span *ngIf="formGroup.controls['age'].errors?.['required']">Obavezno polje</span>
+            </div>
+          </div>
         </div>
 
         <!-- Submit Button -->
         <div class="d-flex justify-content-center py-3">
-          <button type="submit" class="btn btn-success" [disabled]="!formGroup.valid">KREIRAJ PLAN</button>
+          <button type="submit" class="btn btn-success" [disabled]="!formGroup.valid || !allDebtsPayable()">KREIRAJ PLAN</button>
         </div>
       </form>
     </div>

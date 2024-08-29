@@ -1,5 +1,6 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthGuard } from './helpers/auth.guard';
 
 @Component({
   selector: 'app-root',
@@ -8,7 +9,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AppComponent implements OnInit {
 
-  constructor(private http: HttpClient) {}
+  public isLoggedIn = false;
+  constructor(private router: Router, private authGuard: AuthGuard) {
+    this.isLoggedIn = this.authGuard.isLoggedIn();
+  }
 
   ngOnInit() {  
   }

@@ -31,6 +31,12 @@ public class FormResultsDto
     public bool IsFullVoluntaryPensionInsuranceContribution { get; set; }
 
     public bool HasInvestments { get; set; }
+
+    public decimal InvestmentAmountSuggestion { get; set; }
+
+    public decimal EquityPercentageSuggestion { get; set; }
+
+    public bool HasLowInvestments { get; set; }
 }
 
 public class DebtPayoff

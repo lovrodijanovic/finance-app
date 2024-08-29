@@ -30,8 +30,6 @@ export class CreatePlanComponent {
     private router: Router
   ) {
     this.formGroup = this.formBuilder.group({
-      userId: [null],
-
       hasBudget: [null, Validators.required],
 
       hasEmergencyFund: [null],
@@ -45,7 +43,6 @@ export class CreatePlanComponent {
 
       hasVoluntaryPensionInsurance: [null, Validators.required],
       voluntaryPensionInsurance: this.formBuilder.group({
-        amount: [null, Validators.required],
         monthlyContribution: [null, Validators.required],
       }),
 
@@ -55,6 +52,8 @@ export class CreatePlanComponent {
       riskSensitivity: [null, [Validators.required, Validators.min(1), Validators.max(5)]],
 
       netEarnings: [null, Validators.required],
+
+      age: [null, Validators.required],
     });
 
     this.formGroup.get('hasDebt')?.valueChanges.subscribe(value => {
@@ -136,7 +135,6 @@ export class CreatePlanComponent {
     this.investments.push(
       this.formBuilder.group({
         investmentType: [this.investmentTypes[0]?.id || ''],
-        amount: [null],
         monthlyContribution: [null],
       })
     );
@@ -162,16 +160,43 @@ export class CreatePlanComponent {
     }
   }
 
+  allDebtsPayable(): boolean {
+    let allDebtsPayable = true;
+
+    this.debts.controls.forEach(debt => {
+      const remainingBalance = debt.get('remainingBalance')?.value;
+      const monthlyContribution = debt.get('monthlyContribution')?.value;
+      const interestRate = debt.get('interestRate')?.value;
+
+      const monthlyInterest = (remainingBalance * (interestRate / 100)) / 12;
+
+      if (monthlyContribution <= monthlyInterest) {
+        allDebtsPayable = false;
+        debt.get('monthlyContribution')?.setErrors({ unpayableDebt: true });
+      } else {
+        debt.get('monthlyContribution')?.setErrors(null);
+      }
+    });
+
+    return allDebtsPayable;
+  }
+
   onSubmit() {
     const financialForm = {
       ...this.formGroup.value,
-      userId: '123e4567-e89b-12d3-a456-426614174000',
+      userId: sessionStorage.getItem('userId'),
       hasBudget: this.convertToBoolean(this.formGroup.value.hasBudget),
       hasDebt: this.convertToBoolean(this.formGroup.value.hasDebt),
       hasEmergencyFund: this.convertToBoolean(this.formGroup.value.hasEmergencyFund),
       hasInvestments: this.convertToBoolean(this.formGroup.value.hasInvestments),
       hasVoluntaryPensionInsurance: this.convertToBoolean(this.formGroup.value.hasVoluntaryPensionInsurance),
     };
+
+    if (this.allDebtsPayable()) {
+      console.log('Form can be submitted', this.formGroup.value);
+    } else {
+      console.log('Form contains unpayable debts.');
+    }
 
     this.financialFormService.submitForm(financialForm).subscribe(
       response => {
