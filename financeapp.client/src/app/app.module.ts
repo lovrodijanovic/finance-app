@@ -11,18 +11,20 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './pages/login/login.component';
 import { HeadersInterceptor } from './helpers/headers.interceptor';
 import { SharedModule } from './shared/shared/shared.module';
+import { HistoryComponent } from './pages/history/history.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     RegisterComponent,
-    LoginComponent
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
     HeaderComponent,
+    HistoryComponent,
     FooterComponent,
     SharedModule,
     ReactiveFormsModule

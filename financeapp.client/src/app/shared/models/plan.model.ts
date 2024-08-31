@@ -150,3 +150,11 @@ export interface DebtPayoff {
   totalInterest: number;
   totalPayments: number;
 }
+
+export interface FinancialStatusHistory {
+  id: string;
+  age: number;
+  financialScore: number;
+  netEarnings: number;
+  riskSensitivity: number;
+}

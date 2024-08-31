@@ -1,1 +1,25 @@
-<p>history works!</p>
+<h1>Moja financijska povijest</h1>
+<div class="row" *ngIf="financialStatusHistory">
+  <div class="col-12">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Detalji</th>
+          <th>Ocjena</th>
+          <th>Primanja</th>
+          <th>Osjetljivost na rizik</th>
+          <th>Dob</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let history of financialStatusHistory">
+          <td><a href="#" (click)="goToDetails(history.id)">Detalji</a></td>
+          <td>{{history.financialScore/2}}/5</td>
+          <td>{{history.netEarnings}} EUR</td>
+          <td>{{history.riskSensitivity}}/5</td>
+          <td>{{history.age}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

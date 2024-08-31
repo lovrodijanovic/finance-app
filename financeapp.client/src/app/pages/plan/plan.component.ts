@@ -14,9 +14,8 @@ import { CommonModule } from '@angular/common';
 })
 
 export class PlanComponent implements OnInit {
-  public financialStatusId!: string;
+  private financialStatusId!: string;
   private routeSub!: Subscription;
-  sectionCounter: number = 0;
 
   public financialFormResults: FormResult = {
     financialScore: 0,
@@ -54,7 +53,7 @@ export class PlanComponent implements OnInit {
     this.routeSub.unsubscribe();
   }
 
-  private loadFinancialResults(): void {
+  public loadFinancialResults(): void {
     if (this.financialStatusId) {
       this.financialFormService.getResults(this.financialStatusId).subscribe(
         (result: FormResult) => {

@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { FinancialForm, FormResult, InvestmentType } from '../shared/models/plan.model';
+import { FinancialForm, FinancialStatusHistory, FormResult, InvestmentType } from '../shared/models/plan.model';
 import { Observable } from 'rxjs/internal/Observable';
 
 @Injectable({
@@ -31,5 +31,9 @@ export class FinancialFormService {
 
   public getInvestmentTypes(): Observable<InvestmentType[]> {
     return this.http.get<InvestmentType[]>(this.baseUrl + `financialForm/get-investment-types`)
+  }
+
+  public getFinancialStatusHistory(userId: string): Observable<FinancialStatusHistory[]> {
+    return this.http.get<FinancialStatusHistory[]>(this.baseUrl + `financialForm/get-financial-status-history/${userId}`)
   }
 }

@@ -1,6 +1,7 @@
 ﻿using FinanceApp.Server.Data;
 using FinanceApp.Server.Models.Definitions;
 using FinanceApp.Server.Models.DTO;
+using FinanceApp.Server.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +15,7 @@ public class UserController : ControllerBase
     private readonly SignInManager<User> _signInManager;
     private readonly DataContext _ctx;
 
-    public UserController(UserManager<User> userManager, SignInManager<User> signInManager, DataContext ctx)
+    public UserController(UserManager<User> userManager, SignInManager<User> signInManager, DataContext ctx, FormService formService)
     {
         _userManager = userManager;
         _signInManager = signInManager;

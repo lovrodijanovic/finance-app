@@ -8,22 +8,19 @@ import { UserService } from '../../services/user.service';
   standalone: true,
   imports: [BrowserModule, HttpClientModule],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.css'
+  styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
   @Input() isLoggedIn: boolean = false;
 
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService) { }
 
-  }
-  ngOnInit() {
-  }
+  ngOnInit() { }
 
   logOut() {
     this.userService.logOut().subscribe();
     localStorage.removeItem('auth_token');
     sessionStorage.clear();
-
     window.location.href = '/';
   }
 }

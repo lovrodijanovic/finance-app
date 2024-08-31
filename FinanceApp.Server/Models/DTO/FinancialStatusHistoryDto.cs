@@ -2,6 +2,8 @@
 
 public class FinancialStatusHistoryDto
 {
+    public Guid Id { get; set; }
+
     public DateTime DateCreated { get; set; }
 
     public int FinancialScore { get; set; }

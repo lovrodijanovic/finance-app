@@ -37,4 +37,11 @@ public class FinancialFormController : ControllerBase
         var result = await _lookupService.GetInvestmentTypes();
         return Ok(result);
     }
+
+    [HttpGet("get-financial-status-history/{userId}")]
+    public async Task<ActionResult<IEnumerable<FinancialStatusHistoryDto>>> GetFinancialStatusHistory([FromRoute] string userId)
+    {
+        var result = await _formService.GetFinancialStatusHistory(userId);
+        return Ok(result);
+    }
 }

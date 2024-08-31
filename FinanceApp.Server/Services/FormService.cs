@@ -220,6 +220,7 @@ public class FormService : BaseService
         {
             result.Add(new FinancialStatusHistoryDto()
             {
+                Id = financialStatus.Id,
                 Age = financialStatus.Age,
                 DateCreated = financialStatus.DateCreated,
                 FinancialScore = financialStatus.FinancialScore,
@@ -309,11 +310,11 @@ public class FormService : BaseService
         }
         else
         {
-            if (model.EmergencyFund.Amount < smallEmergencyFundAmount)
+            if (model.EmergencyFund != null && model.EmergencyFund.Amount < smallEmergencyFundAmount)
             {
                 score -= 2;
             }
-            else if (model.EmergencyFund.Amount < fullyFundedEmergencyFund)
+            else if (model.EmergencyFund != null && model.EmergencyFund.Amount < fullyFundedEmergencyFund)
             {
                 score -= 1;
             }
@@ -342,7 +343,7 @@ public class FormService : BaseService
         {
             score -= 2;
         }
-        else if (model.HasVoluntaryPensionInsurance && model.VoluntaryPensionInsurance!.MonthlyContribution < minimalVoluntaryPensionInsuranceForFullStimulus)
+        else if (model.HasVoluntaryPensionInsurance && model.VoluntaryPensionInsurance != null && model.VoluntaryPensionInsurance.MonthlyContribution < minimalVoluntaryPensionInsuranceForFullStimulus)
         {
             score -= 1;
         }
