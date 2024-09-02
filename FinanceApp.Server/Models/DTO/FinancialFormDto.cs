@@ -4,7 +4,7 @@ namespace FinanceApp.Server.Models.DTO;
 
 public class FinancialFormDto
 {
-    public Guid UserId { get; set; }
+    public string? UserId { get; set; } = "";
 
     public bool HasBudget { get; set; }
 

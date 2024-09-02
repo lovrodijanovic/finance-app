@@ -1,49 +1,56 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { FinancialFormService } from '../../services/financial-form.service';
 import { FinancialStatusHistory } from '../../shared/models/plan.model';
-import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-history',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './history.component.html',
-  styleUrl: './history.component.css'
+  styleUrls: ['./history.component.css']
 })
-export class HistoryComponent {
-  private userId!: string | null;
+export class HistoryComponent implements OnInit, OnDestroy {
   private routeSub!: Subscription;
-  public financialStatusHistory!: FinancialStatusHistory[];
+  public financialStatusHistory: FinancialStatusHistory[] = [];
+  public selectedFinancialStatusId: string | null = null;
+
+  constructor(
+    private financialFormService: FinancialFormService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) { }
 
   ngOnInit(): void {
-    this.userId = sessionStorage.getItem("userId");
     this.loadFinancialStatusHistory();
+    this.route.params.subscribe(params => {
+      this.selectedFinancialStatusId = params['financialStatusId'] || null;
+    });
   }
 
-  ngOnDestroy() {
-    this.routeSub.unsubscribe();
-  }
-
-  constructor(private financialFormService: FinancialFormService, private router: Router) {
-
+  ngOnDestroy(): void {
+    if (this.routeSub) {
+      this.routeSub.unsubscribe();
+    }
   }
 
   private loadFinancialStatusHistory(): void {
-    if (this.userId) {
-      this.financialFormService.getFinancialStatusHistory(this.userId).subscribe(
+    const userId = sessionStorage.getItem('userId');
+    if (userId) {
+      this.financialFormService.getFinancialStatusHistory(userId).subscribe(
         (result: FinancialStatusHistory[]) => {
           this.financialStatusHistory = result;
         },
         (error) => {
           console.error('Error fetching financial status history', error);
         }
-      )
+      );
     }
   }
 
-  goToDetails(historyId: string) {
-    this.router.navigate(['/plan', historyId]);
+  goToDetails(id: string): void {
+    this.router.navigate(['/plan', { financialStatusId: id }]);
   }
 }

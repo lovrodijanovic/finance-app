@@ -1,4 +1,11 @@
-﻿:host {
+.flex-wrapper {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+:host {
     display: flex;
     flex-direction: column;
     padding-top: 60px;

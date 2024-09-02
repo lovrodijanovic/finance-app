@@ -1,25 +1,45 @@
-<h1>Moja financijska povijest</h1>
-<div class="row" *ngIf="financialStatusHistory">
-  <div class="col-12">
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Detalji</th>
-          <th>Ocjena</th>
-          <th>Primanja</th>
-          <th>Osjetljivost na rizik</th>
-          <th>Dob</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let history of financialStatusHistory">
-          <td><a href="#" (click)="goToDetails(history.id)">Detalji</a></td>
-          <td>{{history.financialScore/2}}/5</td>
-          <td>{{history.netEarnings}} EUR</td>
-          <td>{{history.riskSensitivity}}/5</td>
-          <td>{{history.age}}</td>
-        </tr>
-      </tbody>
-    </table>
+<h3 class="text-center my-4">Moja financijska povijest</h3>
+<div class="row justify-content-center" *ngIf="financialStatusHistory">
+  <div class="col-12 col-md-8 col-lg-10">
+    <div class="table-responsive shadow-lg rounded">
+      <table class="table table-hover table-striped align-middle">
+        <thead class="thead-dark">
+          <tr>
+            <th class="text-center">Detalji</th>
+            <th class="text-center">Ocjena</th>
+            <th class="text-center">Primanja</th>
+            <th class="text-center">Osjetljivost na rizik</th>
+            <th class="text-center">Dob</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let history of financialStatusHistory" class="text-center">
+            <td class="align-middle">
+              <a [routerLink]="['/plan', { financialStatusId: history.id }]">Go to Details</a>
+            </td>
+            <td class="align-middle">
+              <span class="badge"
+                    [ngClass]="{
+                    'bg-danger' : (history.financialScore / 2) < 2,
+                    'bg-warning': (history.financialScore / 2) >= 2 && (history.financialScore / 2) < 3,
+                    'bg-success': (history.financialScore / 2) >= 3
+                  }"
+                >
+                  {{history.financialScore / 2}}/5
+                </span>
+            </td>
+            <td class="align-middle">
+              <strong>{{history.netEarnings}} EUR</strong>
+            </td>
+            <td class="align-middle">
+              <span class="badge bg-warning text-dark">
+                {{history.riskSensitivity}}/5
+              </span>
+            </td>
+            <td class="align-middle">{{history.age}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

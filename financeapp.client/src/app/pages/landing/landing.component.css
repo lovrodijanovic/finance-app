@@ -18,7 +18,6 @@
 
 .first-second {
     margin: 0 auto;
-    /* width: fit-content; */
 }
 
 .first-info {
@@ -26,7 +25,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    height: 100%; /* Adjust the height as needed */
+    height: 100%;
 }
 
 .card{
@@ -54,7 +53,7 @@
 }
 
 .card:hover {
-    background-color: #ffffff; /* Change the background color on hover */
+    background-color: #ffffff;
 }
 
 .second {
@@ -67,7 +66,7 @@
     justify-content: center;
     gap:40px;
 
-    img {
+    img{
         max-width: 150px;
     }
     
@@ -121,9 +120,7 @@
     opacity: 1;
     animation: fadeIn 2s ease-in-out;
   }
-/* Media queries for different screen sizes */
 
-/* Extra small devices (portrait phones, less than 576px) */
 @media (min-width: 100px) and (max-width: 575px) {
     .first-one h1 {
         font-size: 45px !important;
@@ -148,7 +145,6 @@
     }
 }
 
-/* Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) and (max-width: 767px) {
     .first-one h1 {
         font-size: 70px !important;
@@ -169,21 +165,18 @@
     }   
 }
 
-/* Medium devices (tablets, 768px and up) */
 @media (min-width: 768px) and (max-width: 991px) {
     .first-one h1 {
         font-size: 80px !important;
     }
 }
 
-/* Large devices (desktops, 992px and up) */
 @media (min-width: 992px) and (max-width: 1199px) {
     .first-one h1 {
         font-size: 90px !important;
     }
 }
 
-/* Extra large devices (large desktops, 1200px and up) */
 @media (min-width: 1200px) {
     .first-one h1 {
         font-size: 100px !important;

@@ -11,16 +11,19 @@ import { User } from '../../shared/models/user.model';
 })
 export class RegisterComponent {
   registerForm: FormGroup;
+  public errorMessage: string | null = null;
+
 
   constructor(private fb: FormBuilder, private userService: UserService, private router: Router) {
     this.registerForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      age: ['', [Validators.required, Validators.min(1)]]
     });
   }
 
   onSubmit() {
+    this.errorMessage = null;
+
     if (this.registerForm.valid) {
       const formValues = this.registerForm.value;
       const user = new User(formValues);
@@ -30,12 +33,16 @@ export class RegisterComponent {
           alert("Račun uspješno kreiran!");
           this.router.navigate(['/login']);
         },
-        error => {
-          console.error('Error submitting form', error);
+        (error) => {
+          if (error && error.error && error.error[0].code === 'DuplicateUserName') {
+            this.errorMessage = "Korisnik s unesenim emailom već postoji.";
+          } else {
+            this.errorMessage = "An unexpected error occurred.";
+          }
         }
       );
     } else {
-      console.log('Form is not valid');
+      this.errorMessage = "Forma nepravilna.";
     }
   }
 }

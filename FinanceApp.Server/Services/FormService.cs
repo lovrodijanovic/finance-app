@@ -2,6 +2,7 @@
 using FinanceApp.Server.Models.Definitions;
 using FinanceApp.Server.Models.DTO;
 using Mapster;
+using Microsoft.EntityFrameworkCore;
 
 namespace FinanceApp.Server.Services;
 
@@ -17,12 +18,12 @@ public class FormService : BaseService
 
     public async Task<Guid> SubmitForm(FinancialFormDto model)
     {
-        var financialStatus = new FinancialStatus()
+        var financialStatus = new FinancialStatus
         {
             Id = Guid.NewGuid(),
             DateCreated = DateTime.UtcNow,
             DateUpdated = DateTime.UtcNow,
-            UserId = model.UserId.ToString(),
+            UserId = model.UserId,
             HasBudget = model.HasBudget,
             HasDebt = model.HasDebt,
             HasInvestments = model.HasInvestments,
@@ -36,69 +37,24 @@ public class FormService : BaseService
 
         await _ctx.FinancialStatus.AddAsync(financialStatus);
 
-        if (model.Investments != null)
+        if (model.Investments != null && model.Investments.Any())
         {
-            var investments = new List<Investment>();
-            foreach (var investment in model.Investments)
-            {
-                investments.Add(new Investment()
-                {
-                    Id = Guid.NewGuid(),
-                    DateCreated = DateTime.UtcNow,
-                    DateUpdated = DateTime.UtcNow,
-                    FinancialStatusId = financialStatus.Id,
-                    MonthlyContribution = investment.MonthlyContribution,
-                    InvestmentTypeId = investment.InvestmentType
-                });  
-            }
-            await _ctx.Investment.AddRangeAsync(investments);
+            await AddInvestments(model.Investments, financialStatus.Id);
         }
-
-        if (model.Debts != null)
+        
+        if (model.Debts != null && model.Debts.Any())
         {
-            var debts = new List<Debt>();
-            foreach (var debt in model.Debts)
-            {
-                debts.Add(new Debt()
-                {
-                    Id = Guid.NewGuid(),
-                    DateCreated = DateTime.UtcNow,
-                    DateUpdated = DateTime.UtcNow,
-                    FinancialStatusId = financialStatus.Id,
-                    DebtName = debt.DebtName,
-                    RemainingBalance = debt.RemainingBalance,
-                    MonthlyContribution = debt.MonthlyContribution,
-                    InterestRate = debt.InterestRate,
-                });
-            }
-            await _ctx.Debt.AddRangeAsync(debts);
+            await AddDebts(model.Debts, financialStatus.Id);
         }
 
         if (model.EmergencyFund != null)
         {
-            var emergencyFund = new EmergencyFund()
-            {
-                Id = Guid.NewGuid(),
-                DateCreated = DateTime.UtcNow,
-                DateUpdated = DateTime.UtcNow,
-                FinancialStatusId = financialStatus.Id,
-                Amount = model.EmergencyFund.Amount,
-                MonthlyContribution = model.EmergencyFund.MonthlyContribution
-            };
-            await _ctx.EmergencyFund.AddAsync(emergencyFund);
+            await AddEmergencyFund(model.EmergencyFund, financialStatus.Id);
         }
 
         if (model.VoluntaryPensionInsurance != null)
         {
-            var voluntaryPensionInsurance = new VoluntaryPensionInsurance()
-            {
-                Id = Guid.NewGuid(),
-                DateCreated = DateTime.UtcNow,
-                DateUpdated = DateTime.UtcNow,
-                FinancialStatusId = financialStatus.Id,
-                MonthlyContribution = model.VoluntaryPensionInsurance.MonthlyContribution
-            };
-            await _ctx.VoluntaryPensionInsurance.AddAsync(voluntaryPensionInsurance);
+            await AddVoluntaryPensionInsurance(model.VoluntaryPensionInsurance, financialStatus.Id);
         }
 
         await _ctx.SaveChangesAsync();
@@ -106,17 +62,78 @@ public class FormService : BaseService
         return financialStatus.Id;
     }
 
+    private async Task AddInvestments(IEnumerable<InvestmentDto> investments, Guid financialStatusId)
+    {
+        var investmentEntities = investments.Select(investment => new Investment
+        {
+            Id = Guid.NewGuid(),
+            DateCreated = DateTime.UtcNow,
+            DateUpdated = DateTime.UtcNow,
+            FinancialStatusId = financialStatusId,
+            MonthlyContribution = investment.MonthlyContribution,
+            InvestmentTypeId = investment.InvestmentType
+        }).ToList();
+
+        await _ctx.Investment.AddRangeAsync(investmentEntities);
+    }
+
+    private async Task AddDebts(IEnumerable<DebtDto> debts, Guid financialStatusId)
+    {
+        var debtEntities = debts.Select(debt => new Debt
+        {
+            Id = Guid.NewGuid(),
+            DateCreated = DateTime.UtcNow,
+            DateUpdated = DateTime.UtcNow,
+            FinancialStatusId = financialStatusId,
+            DebtName = debt.DebtName,
+            RemainingBalance = debt.RemainingBalance,
+            MonthlyContribution = debt.MonthlyContribution,
+            InterestRate = debt.InterestRate,
+        }).ToList();
+
+        await _ctx.Debt.AddRangeAsync(debtEntities);
+    }
+
+    private async Task AddEmergencyFund(EmergencyFundDto emergencyFund, Guid financialStatusId)
+    {
+        var emergencyFundEntity = new EmergencyFund
+        {
+            Id = Guid.NewGuid(),
+            DateCreated = DateTime.UtcNow,
+            DateUpdated = DateTime.UtcNow,
+            FinancialStatusId = financialStatusId,
+            Amount = emergencyFund.Amount,
+            MonthlyContribution = emergencyFund.MonthlyContribution
+        };
+
+        await _ctx.EmergencyFund.AddAsync(emergencyFundEntity);
+    }
+
+    private async Task AddVoluntaryPensionInsurance(VoluntaryPensionInsuranceDto voluntaryPensionInsurance, Guid financialStatusId)
+    {
+        var voluntaryPensionInsuranceEntity = new VoluntaryPensionInsurance
+        {
+            Id = Guid.NewGuid(),
+            DateCreated = DateTime.UtcNow,
+            DateUpdated = DateTime.UtcNow,
+            FinancialStatusId = financialStatusId,
+            MonthlyContribution = voluntaryPensionInsurance.MonthlyContribution
+        };
+
+        await _ctx.VoluntaryPensionInsurance.AddAsync(voluntaryPensionInsuranceEntity);
+    }
+
+
     public async Task<FormResultsDto> GetFormResults(Guid financialStatusId)
     {
-        var financialStatus = _ctx.FinancialStatus.FirstOrDefault(x => x.Id == financialStatusId);
-        var debts = _ctx.Debt.Where(x => x.FinancialStatusId == financialStatusId).ProjectToType<DebtDto>().ToList();
-        var emergencyFund = _ctx.EmergencyFund.FirstOrDefault(x => x.FinancialStatusId == financialStatusId);
-        var voluntaryPensionInsurance = _ctx.VoluntaryPensionInsurance.FirstOrDefault(x => x.FinancialStatusId == financialStatusId);
+        var financialStatus = await _ctx.FinancialStatus.FirstOrDefaultAsync(x => x.Id == financialStatusId);
+        var debts = await _ctx.Debt.Where(x => x.FinancialStatusId == financialStatusId).ProjectToType<DebtDto>().ToListAsync();
+        var emergencyFund = await _ctx.EmergencyFund.FirstOrDefaultAsync(x => x.FinancialStatusId == financialStatusId);
+        var voluntaryPensionInsurance = await _ctx.VoluntaryPensionInsurance.FirstOrDefaultAsync(x => x.FinancialStatusId == financialStatusId);
 
         bool hasFullEmergencyFund = false;
         bool hasSmallEmergencyFund = false;
-
-        if (emergencyFund != null)
+        if (financialStatus != null && emergencyFund != null)
         {
             hasFullEmergencyFund = emergencyFund.Amount > 3 * financialStatus.NetEarnings;
             hasSmallEmergencyFund = emergencyFund.Amount >= smallEmergencyFundAmount;
@@ -211,9 +228,11 @@ public class FormService : BaseService
         return formResults;
     }
 
-    public async Task<List<FinancialStatusHistoryDto>> GetFinancialStatusHistory(string userId)
+    public async Task<List<FinancialStatusHistoryDto>> GetFinancialStatusHistoryAsync(string userId)
     {
-        var financialStatuses = _ctx.FinancialStatus.Where(x => x.UserId == userId).ToList();
+        var financialStatuses = await _ctx.FinancialStatus
+            .Where(x => x.UserId == userId)
+            .ToListAsync();
 
         var result = new List<FinancialStatusHistoryDto>();
         foreach (var financialStatus in financialStatuses)
@@ -261,7 +280,6 @@ public class FormService : BaseService
 
                 if (debt.RemainingBalance <= debt.MonthlyContribution)
                 {
-                    decimal finalPayment = debt.RemainingBalance;
                     debt.RemainingBalance = 0;
 
                     debtPayoffs.Add(new DebtPayoff
@@ -296,62 +314,38 @@ public class FormService : BaseService
     {
         int score = 10;
         decimal fullyFundedEmergencyFund = model.NetEarnings * 3;
-        const decimal mediumInterestRate = 6;
-        const decimal highInterestRate = 8;
+        const int mediumInterestRate = 6;
+        const int highInterestRate = 8;
 
-        if (!model.HasBudget)
+        score -= model.HasBudget ? 0 : 2;
+
+        if (!model.HasEmergencyFund 
+            || (model.HasEmergencyFund && model.EmergencyFund != null && model.EmergencyFund.Amount < smallEmergencyFundAmount))
         {
             score -= 2;
         }
-
-        if (!model.HasEmergencyFund)
+        else if (model.HasEmergencyFund && model.EmergencyFund != null && model.EmergencyFund.Amount < fullyFundedEmergencyFund)
         {
-            score -= 2;
-        }
-        else
-        {
-            if (model.EmergencyFund != null && model.EmergencyFund.Amount < smallEmergencyFundAmount)
-            {
-                score -= 2;
-            }
-            else if (model.EmergencyFund != null && model.EmergencyFund.Amount < fullyFundedEmergencyFund)
-            {
-                score -= 1;
-            }
+            score -= 1;
         }
 
         if (model.HasDebt && model.Debts != null)
         {
-            var isHighInterestRate = model.Debts.Any(x => x.InterestRate >= highInterestRate);
-            if (model.Debts.Any(x => x.InterestRate >= highInterestRate))
-            {
-                foreach (var debt in model.Debts.Where(x => x.InterestRate >= highInterestRate))
-                {
-                    score -= 2;
-                }
-            }
-            else if (model.Debts.Any(x => x.InterestRate >= mediumInterestRate && x.InterestRate < highInterestRate))
-            {
-                foreach (var debt in model.Debts.Where(x => x.InterestRate >= mediumInterestRate && x.InterestRate < highInterestRate))
-                {
-                    score -= 1;
-                }
-            }
+            score -= model.Debts.Count(x => x.InterestRate >= highInterestRate) * 2;
+            score -= model.Debts.Count(x => x.InterestRate >= mediumInterestRate && x.InterestRate < highInterestRate);
         }
 
         if (!model.HasVoluntaryPensionInsurance)
         {
             score -= 2;
         }
-        else if (model.HasVoluntaryPensionInsurance && model.VoluntaryPensionInsurance != null && model.VoluntaryPensionInsurance.MonthlyContribution < minimalVoluntaryPensionInsuranceForFullStimulus)
+        else if (model.HasVoluntaryPensionInsurance && model.VoluntaryPensionInsurance != null
+            && model.VoluntaryPensionInsurance.MonthlyContribution < minimalVoluntaryPensionInsuranceForFullStimulus)
         {
             score -= 1;
         }
 
-        if (!model.HasInvestments)
-        {
-            score -= 2;
-        }
+        score -= model.HasInvestments ? 0 : 2;
 
         return score >= 0 ? score : 0;
     }

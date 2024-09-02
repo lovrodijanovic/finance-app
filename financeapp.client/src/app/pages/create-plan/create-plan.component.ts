@@ -184,19 +184,13 @@ export class CreatePlanComponent {
   onSubmit() {
     const financialForm = {
       ...this.formGroup.value,
-      userId: sessionStorage.getItem('userId'),
+      userId: sessionStorage.getItem('userId') ?? null,
       hasBudget: this.convertToBoolean(this.formGroup.value.hasBudget),
       hasDebt: this.convertToBoolean(this.formGroup.value.hasDebt),
       hasEmergencyFund: this.convertToBoolean(this.formGroup.value.hasEmergencyFund),
       hasInvestments: this.convertToBoolean(this.formGroup.value.hasInvestments),
       hasVoluntaryPensionInsurance: this.convertToBoolean(this.formGroup.value.hasVoluntaryPensionInsurance),
     };
-
-    if (this.allDebtsPayable()) {
-      console.log('Form can be submitted', this.formGroup.value);
-    } else {
-      console.log('Form contains unpayable debts.');
-    }
 
     this.financialFormService.submitForm(financialForm).subscribe(
       response => {

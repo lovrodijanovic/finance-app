@@ -10,6 +10,7 @@ import { UserService } from "src/app/services/user.service";
 })
 export class LoginComponent {
   loginForm: FormGroup;
+  public errorMessage: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -23,7 +24,11 @@ export class LoginComponent {
   }
 
   onSubmit() {
-    if (this.loginForm.invalid) return;
+    this.errorMessage = null;
+
+    if (this.loginForm.invalid) {
+      return;
+    }
 
     const formData = this.loginForm.getRawValue();
 
@@ -40,13 +45,15 @@ export class LoginComponent {
           },
           (error) => {
             if (error.status === 401) {
-              alert("Neispravan email ili lozinka");
+              this.errorMessage = "Neispravan email ili lozinka";
+            } else {
+              this.errorMessage = "An unexpected error occurred during login.";
             }
           }
         );
       },
       (error) => {
-        console.error("Failed to retrieve userId", error);
+        this.errorMessage = "Nepoznat korisnik, pokušajte ponovno.";
       }
     );
   }

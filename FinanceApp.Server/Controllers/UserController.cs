@@ -29,7 +29,6 @@ public class UserController : ControllerBase
         {
             UserName = registerDto.Email,
             Email = registerDto.Email,
-            Age = registerDto.Age
         };
 
         var result = await _userManager.CreateAsync(user, registerDto.Password);

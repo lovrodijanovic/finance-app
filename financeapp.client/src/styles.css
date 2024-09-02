@@ -2,9 +2,14 @@
 @import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 @import "../node_modules/bootstrap-icons/font/bootstrap-icons.css";
 
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 body {
-    font-family: 'Roboto';
-    margin: 0;
+  font-family: 'Roboto';
+  margin: 0;
+  overflow-x: hidden;
 }
 
 .hidden-element {
@@ -24,10 +29,8 @@ body {
     transition: opacity 0.6s ease-out 0.3s, transform 1s ease-out 0.3s;
 }
 
-
 .visible {
-    opacity: 1;
-    transform: translateY(0);
-    transform: translateX(0);
-
+  opacity: 1;
+  transform: translateY(0) translateX(0);
 }
+

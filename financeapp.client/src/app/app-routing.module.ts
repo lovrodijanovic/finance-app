@@ -21,10 +21,6 @@ const routes: Routes = [
     component: CreatePlanComponent
   },
   {
-    path: 'plan/:id',
-    component: PlanComponent
-  },
-  {
     path: 'plan',
     component: PlanComponent
   },
@@ -45,7 +41,8 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forRoot(routes, {
     scrollPositionRestoration: 'top'
-  })
+  }),
+  HistoryComponent
   ],
   exports: [RouterModule]
 })

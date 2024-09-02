@@ -70,31 +70,31 @@ export class VoluntaryPensionInsurance {
 }
 
 export class FinancialForm {
-  userId: string;
+  userId?: string | null;
   hasBudget: boolean;
   hasEmergencyFund: boolean;
-  emergencyFund: EmergencyFund;
+  emergencyFund?: EmergencyFund | null;;
   hasDebt: boolean;
-  debts: Debt[];
+  debts?: Debt[] | null;;
   hasVoluntaryPensionInsurance: boolean;
-  voluntaryPensionInsurance: VoluntaryPensionInsurance;
+  voluntaryPensionInsurance?: VoluntaryPensionInsurance | null;;
   hasInvestments: boolean;
-  investments: Investment[];
+  investments?: Investment[] | null;;
   riskSensitivity: number;
   netEarnings: number;
   age: number;
 
   constructor(model: any) {
-    this.userId = model.userId;
+    this.userId = model.userId ?? null;
     this.hasBudget = model.hasBudget;
     this.hasEmergencyFund = model.hasEmergencyFund;
-    this.emergencyFund = model.emergencyFund;
+    this.emergencyFund = model.emergencyFund ?? null;
     this.hasDebt = model.hasDebt;
-    this.debts = model.debts;
+    this.debts = model.debts ?? null;
     this.hasVoluntaryPensionInsurance = model.hasVoluntaryPensionInsurance;
-    this.voluntaryPensionInsurance = model.voluntaryPensionInsurance;
+    this.voluntaryPensionInsurance = model.voluntaryPensionInsurance ?? null;
     this.hasInvestments = model.hasInvestments;
-    this.investments = model.investments;
+    this.investments = model.investments ?? null;
     this.riskSensitivity = model.riskSensitivity;
     this.netEarnings = model.netEarnings;
     this.age = model.age;

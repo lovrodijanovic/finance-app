@@ -41,7 +41,7 @@ public class FinancialFormController : ControllerBase
     [HttpGet("get-financial-status-history/{userId}")]
     public async Task<ActionResult<IEnumerable<FinancialStatusHistoryDto>>> GetFinancialStatusHistory([FromRoute] string userId)
     {
-        var result = await _formService.GetFinancialStatusHistory(userId);
-        return Ok(result);
+        var result = await _formService.GetFinancialStatusHistoryAsync(userId);
+        return Ok(result.OrderByDescending(x => x.DateCreated));
     }
 }
