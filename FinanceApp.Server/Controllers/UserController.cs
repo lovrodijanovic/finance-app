@@ -4,7 +4,6 @@ using FinanceApp.Server.Models.DTO;
 using FinanceApp.Server.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace FinanceApp.Server.Controllers;
 [Route("[controller]")]

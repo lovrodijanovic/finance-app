@@ -145,7 +145,7 @@ public class FormService : BaseService
         List<DebtPayoff> lowInterestRateDebtPayoffs = [];
         List<DebtPayoff> mediumInterestRateDebtPayoffs = [];
         List<DebtPayoff> highInterestRateDebtPayoffs = [];
-        if (debts != null && debts.Any())
+        if (debts != null && debts.Count != 0)
         {
             hasDebtsWithLowInterestRate = debts.Any(x => x.InterestRate < 6);
             hasDebtsWithMediumInterestRate = debts.Any(x => x.InterestRate >= 6 && x.InterestRate < 8);
@@ -178,7 +178,7 @@ public class FormService : BaseService
             var voluntaryPensionInsuranceMonthlyContribution = voluntaryPensionInsurance != null ? voluntaryPensionInsurance.MonthlyContribution : 0;
             investmentAmountSuggestion = financialStatus.NetEarnings * 0.2m - voluntaryPensionInsuranceMonthlyContribution;
             
-            if (financialStatus.RiskSensitivity > 3)
+            if (financialStatus.RiskSensitivity < 3)
             {
                 equityPercentageSuggestion = 120 - financialStatus.Age;
             }
@@ -186,7 +186,7 @@ public class FormService : BaseService
             {
                 equityPercentageSuggestion = 110 - financialStatus.Age;
             }
-            else if (financialStatus.RiskSensitivity < 3)
+            else if (financialStatus.RiskSensitivity > 3)
             {
                 equityPercentageSuggestion = 100 - financialStatus.Age;
             }
@@ -271,12 +271,13 @@ public class FormService : BaseService
             foreach (var debt in remainingDebts.ToList())
             {
                 decimal interestPayment = debt.RemainingBalance * (debt.InterestRate / 100 / 12);
-                debt.RemainingBalance += interestPayment;
 
                 if (debt.MonthlyContribution <= interestPayment)
                 {
                     throw new UnpayableDebtException(debt.DebtName);
                 }
+
+                debt.RemainingBalance += interestPayment;
 
                 if (debt.RemainingBalance <= debt.MonthlyContribution)
                 {

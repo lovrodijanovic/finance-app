@@ -184,7 +184,7 @@ export class CreatePlanComponent {
   onSubmit() {
     const financialForm = {
       ...this.formGroup.value,
-      userId: sessionStorage.getItem('userId') ?? null,
+      userId: localStorage.getItem('userId') ?? null,
       hasBudget: this.convertToBoolean(this.formGroup.value.hasBudget),
       hasDebt: this.convertToBoolean(this.formGroup.value.hasDebt),
       hasEmergencyFund: this.convertToBoolean(this.formGroup.value.hasEmergencyFund),

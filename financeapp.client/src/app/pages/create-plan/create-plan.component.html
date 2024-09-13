@@ -8,7 +8,7 @@
         <!-- 1. Imate li budžet -->
         <div class="form-group mb-5 p-3 border rounded shadow-sm">
           <label for="hasBudget" class="form-label">1. Imate li osobni proračun (budžet)?<span class="text-danger"> *</span></label>
-          <p class="form-text">Osobni proračun je financijski plan, tj. popis svih primanja i izdataka u određenom vremenskom razdoblju.</p>
+          <p class="form-text">Osobni proračun je financijski plan, tj. popis svih primanja i izdataka u određenom vremenskom razdoblju. Više možete pročitati na <a href="https://www.investopedia.com/terms/b/budget.asp">poveznici</a>.</p>
           <div class="form-check form-check-inline ms-2">
             <input class="form-check-input" type="radio" id="budgetYes" formControlName="hasBudget" value="true" />
             <label class="form-check-label" for="budgetYes">Da</label>
@@ -22,7 +22,7 @@
         <!-- 2. Imate li hitni fond? -->
         <div class="form-group mb-5 p-3 border rounded shadow-sm">
           <label for="hasEmergencyFund" class="form-label">2. Imate li hitni fond?<span class="text-danger"> *</span></label>
-          <p class="form-text">Hitni fond je određena količina lako dostupnog novca u slučaju potrebe.</p>
+          <p class="form-text">Hitni fond je određena količina lako dostupnog novca u slučaju potrebe. Više možete pročitati na <a href="https://www.investopedia.com/terms/e/emergency_fund.asp">poveznici</a>.</p>
           <div class="form-check form-check-inline ms-2">
             <input class="form-check-input" type="radio" id="emergencyFundYes" formControlName="hasEmergencyFund" [value]="true" />
             <label class="form-check-label" for="emergencyFundYes">Da</label>
@@ -39,7 +39,7 @@
                 <span *ngIf="formGroup.get('emergencyFund.amount')?.errors?.['required']">Obavezno polje</span>
               </div>
               <label for="monthlyContribution" class="form-label small">Mjesečni doprinos (EUR)<span class="text-danger"> *</span></label>
-              <input type="number" class="form-control" id="monthlyContribution" formControlName="monthlyContribution" placeholder="Unesite mjesečni doprinos" min="0" />
+              <input type="number" class="form-control" id="monthlyContribution" formControlName="monthlyContribution" min="0" placeholder="Unesite mjesečni doprinos"/>
               <div class="text-danger" *ngIf="formGroup.get('emergencyFund.monthlyContribution')?.invalid && (formGroup.get('emergencyFund.monthlyContribution')?.touched || formGroup.get('emergencyFund.monthlyContribution')?.dirty)">
                 <span *ngIf="formGroup.get('emergencyFund.monthlyContribution')?.errors?.['required']">Obavezno polje</span>
                 <span *ngIf="formGroup.controls['emergencyFund.monthlyContribution'].errors?.['min']">Nisu dozvoljene negativne vrijednosti</span>
@@ -68,19 +68,19 @@
                 </div>
                 <div class="form-group col-4">
                   <label for="debtName" class="form-label small">Naziv</label>
-                  <input type="text" class="form-control" id="debtName" formControlName="debtName" placeholder="Naziv" />
+                  <input type="text" class="form-control" id="debtName" formControlName="debtName" />
                 </div>
                 <div class="form-group col-4">
                   <label for="remainingBalance" class="form-label small">Ostalo za platiti (EUR)</label>
-                  <input type="number" class="form-control" id="remainingBalance" formControlName="remainingBalance" placeholder="Ostalo za platiti" />
+                  <input type="number" class="form-control" id="remainingBalance" formControlName="remainingBalance"/>
                 </div>
                 <div class="form-group col-4">
                   <label for="monthlyContribution" class="form-label small">Mjesečna plaćanja (EUR)</label>
-                  <input type="number" class="form-control" id="monthlyContribution" formControlName="monthlyContribution" placeholder="Mjesečna plaćanja" />
+                  <input type="number" class="form-control" id="monthlyContribution" formControlName="monthlyContribution"/>
                 </div>
                 <div class="form-group col-4">
                   <label for="interestRate" class="form-label small">Kamatna stopa (%)</label>
-                  <input type="number" class="form-control" id="interestRate" formControlName="interestRate" placeholder="Unesite kamatnu stopu" />
+                  <input type="number" class="form-control" id="interestRate" formControlName="interestRate"/>
                 </div>
               </div>
             </div>
@@ -96,6 +96,7 @@
         <!-- 4. Da li ulažete u 3. Stup mirovinskog osiguranja? -->
         <div class="form-group mb-5 p-3 border rounded shadow-sm">
           <label for="hasVoluntaryPensionInsurance" class="form-label">4. Ulažete li u 3. Stup mirovinskog osiguranja?<span class="text-danger"> *</span></label>
+          <p class="form-text">Više o trećem stupu pročitajte na <a href="https://mss.gov.hr/kapitalizirana-stednja-ii-i-iii-stup/dobrovoljna-mirovinska-stednja-lll-stup/153">poveznici</a>.</p>
           <div class="form-check form-check-inline ms-2">
             <input class="form-check-input" type="radio" id="voluntaryPensionInsuranceYes" formControlName="hasVoluntaryPensionInsurance" [value]="true" />
             <label class="form-check-label" for="voluntaryPensionInsuranceYes">Da</label>
@@ -141,7 +142,7 @@
                 </div>
                 <div class="form-group col-4">
                   <label for="monthlyContribution" class="form-label small">Mjesečni doprinos (EUR)</label>
-                  <input type="number" class="form-control" id="monthlyContribution" formControlName="monthlyContribution" placeholder="Unesite mjesečni doprinos" />
+                  <input type="number" class="form-control" id="monthlyContribution" formControlName="monthlyContribution"/>
                 </div>
               </div>
             </div>
@@ -158,6 +159,9 @@
           <!-- Risk Sensitivity -->
           <div class="mb-3">
             <label for="riskSensitivity" class="form-label">Osjetljivost na rizik (1-5)<span class="text-danger"> *</span>:</label>
+            <p class="form-text">1 - imam malu osjetljivost na rizik: volim riskirati <br />
+               5 - imam veliku osjetljivost na rizik: ne volim riskirati <br/>
+               Više o osjetljivosti na rizik pročitajte na <a href="https://www.investopedia.com/ask/answers/08/difference-between-risk-tolerance-and-risk-capacity.asp">poveznici</a>.</p>
             <input type="number" class="form-control" id="riskSensitivity" formControlName="riskSensitivity" min="1" max="5" step="1" placeholder="Ocijenite svoju osjetljivost na rizik" />
             <div class="text-danger" *ngIf="formGroup.controls['riskSensitivity'].invalid && (formGroup.controls['riskSensitivity'].touched || formGroup.controls['riskSensitivity'].dirty)">
               <span *ngIf="formGroup.controls['riskSensitivity'].errors?.['required']">Obavezno polje</span>

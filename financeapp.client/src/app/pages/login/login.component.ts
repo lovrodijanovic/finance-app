@@ -37,7 +37,7 @@ export class LoginComponent {
         this.userService.login(formData).subscribe(
           (result) => {
             localStorage.setItem("auth_token", result.accessToken);
-            sessionStorage.setItem('userId', userId);
+            localStorage.setItem('userId', userId);
             this.userService.authorizedSubject.next(true);
             this.router.navigateByUrl('/').then(() => {
               window.location.reload();
